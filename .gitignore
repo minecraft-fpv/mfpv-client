@@ -1,0 +1,14 @@
+run
+out
+logs
+build
+.idea
+.gradle
+.env
+release.sh
+releaseToServer.sh
+checkRelease.sh
+jd-cli.jar
+proguard.jar
+proguardconf
+version.json
