@@ -93,11 +93,13 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 configurations {
     embed
     compile.extendsFrom(embed)
+    testImplementation.extendsFrom annotationProcessor
 }
 repositories {
     jcenter()
 }
 dependencies {
+    annotationProcessor 'systems.manifold:manifold-preprocessor:2021.1.16'
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
@@ -124,6 +126,19 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+}
+
+if (JavaVersion.current() != JavaVersion.VERSION_1_8 &&
+        sourceSets.main.allJava.files.any {it.name == "module-info.java"}) {
+    tasks.withType(JavaCompile) {
+        // if you DO define a module-info.java file:
+        options.compilerArgs += ['-Xplugin:Manifold', '--module-path', it.classpath.asPath]
+    }
+} else {
+    tasks.withType(JavaCompile) {
+        // If you DO NOT define a module-info.java file:
+        options.compilerArgs += ['-Xplugin:Manifold']
+    }
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

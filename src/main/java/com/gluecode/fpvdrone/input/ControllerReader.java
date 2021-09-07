@@ -17,7 +17,6 @@ import net.minecraft.entity.Pose;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import org.json.simple.JSONArray;
 import org.lwjgl.glfw.GLFW;
@@ -586,29 +585,16 @@ public class ControllerReader {
         core.setDroneLook(rot.mult(Vector3f.UNIT_Z));
         core.setDroneUp(rot.mult(Vector3f.UNIT_Y));
         core.setDroneLeft(core.getDroneUp().cross(core.getDroneLook()));;
-        if (player.level.isClientSide) {
-          DistExecutor.runWhenOn(
-            Dist.CLIENT,
-            () -> () -> {
-              if (minecraft.screen == null) {
-                minecraft.getSoundManager().play(new DroneSound(player));
-              }
-            }
-          );
-          DistExecutor.runWhenOn(
-            Dist.CLIENT,
-            () -> () -> Network.updateArmState(player)
-          );
+        if (minecraft.screen == null) {
+          minecraft.getSoundManager().play(new DroneSound(player));
         }
+        Network.updateArmState(player);
         
         if (!arm) {
           disarmFov = (float) minecraft.options.fov;
         }
       } else {
-        DistExecutor.runWhenOn(
-          Dist.CLIENT,
-          () -> () -> Network.updateArmState(player)
-        );
+        Network.updateArmState(player);
         player.setPose(Pose.STANDING);
         
         Vector3f motion = PhysicsState.getCore().getVelocity().mult(0.05f); // 1 tick

@@ -12,3 +12,9 @@ jd-cli.jar
 proguard.jar
 proguardconf
 version.json
+settings.gradle
+.DS_Store
+
+# For Manifold:
+AdvancedPhysicsCore.java
+build.properties

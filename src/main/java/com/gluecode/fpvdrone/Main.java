@@ -6,6 +6,7 @@ import com.gluecode.fpvdrone.input.ControllerReader;
 import com.gluecode.fpvdrone.input.KeyManager;
 import com.gluecode.fpvdrone.network.packet.PacketHandler;
 import com.gluecode.fpvdrone.network.VersionNotifier;
+import com.gluecode.fpvdrone.physics.PhysicsCoreLoader;
 import com.gluecode.fpvdrone.util.SettingsLoader;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
@@ -34,6 +35,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -71,6 +73,8 @@ public class Main {
       ControllerReader.init();
       SettingsLoader.load();
       VersionNotifier.init();
+  
+      PhysicsCoreLoader.load();
     });
     PacketHandler.register();
     
