@@ -12,10 +12,10 @@ package com.gluecode.fpvdrone.physics;
 
 public class PhysicsCoreLoader {
   public static void load() {
-#if ADVANCED_PHYSICS
-    PhysicsState.setCore(new AdvancedPhysicsCore());
-#else
+//#if ADVANCED_PHYSICS
+//    PhysicsState.setCore(new AdvancedPhysicsCore());
+//#else
     PhysicsState.setCore(new DefaultPhysicsCore());
-#endif
+//#endif
   }
 }
