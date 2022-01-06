@@ -9,9 +9,10 @@ import com.gluecode.fpvdrone.util.Transforms;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.PointOfView;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class DefaultPhysicsCore implements IPhysicsCore {
   private static final float rads = (float) (Math.PI / 180);
@@ -143,7 +144,7 @@ public class DefaultPhysicsCore implements IPhysicsCore {
       );
     }
     
-    float sag = MathHelper.lerp(FastMath.abs(throt), 4.0f, 3.6f);
+    float sag = Mth.lerp(FastMath.abs(throt), 4.0f, 3.6f);
     float vbat = sag * batteryCells * throt;
     
     float lowestAllowedFrameRate = 15f;
@@ -184,7 +185,7 @@ public class DefaultPhysicsCore implements IPhysicsCore {
       * That code is not open source.
       * */
       float strength = kv * 0.1f;
-      float efficiency = MathHelper.lerp(throt, 0.35f, 1f);
+      float efficiency = Mth.lerp(throt, 0.35f, 1f);
       Vector3f thrust = droneUp.mult(throt * efficiency / mass * strength);
       netForce.addLocal(thrust);
       
@@ -246,7 +247,7 @@ public class DefaultPhysicsCore implements IPhysicsCore {
     }
     
     if (minecraft.options.getCameraType() ==
-        PointOfView.THIRD_PERSON_FRONT) {
+        CameraType.THIRD_PERSON_FRONT) {
       //          yawDiff *= -1;
       pitchDiff *= -1;
       rollDiff *= -1;

@@ -9,7 +9,7 @@ import com.gluecode.fpvdrone.network.packet.PacketHandler;
 import com.gluecode.fpvdrone.network.packet.SetArmPacket;
 import com.jme3.math.Quaternion;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @OnlyIn(Dist.CLIENT)
 public class Network {
-  public static void updateArmState(PlayerEntity player) {
+  public static void updateArmState(Player player) {
     // Poses are automatically synced from server->client, so we don't have to worry about other players on the client
     if (player == Minecraft.getInstance().player) {
       updateClientArmState();
@@ -25,7 +25,7 @@ public class Network {
   }
   
   public static void updateDroneState(
-    PlayerEntity player,
+    Player player,
     Quaternion rot,
     float motorVel1,
     float motorVel2,
@@ -48,7 +48,7 @@ public class Network {
   }
   
   private static void updateClientArmState() {
-    PlayerEntity player = Minecraft.getInstance().player;
+    Player player = Minecraft.getInstance().player;
     if (player != null) {
       UUID uuid = player.getUUID();
       if (ControllerReader.getArm() != Main.entityArmStates.getOrDefault(

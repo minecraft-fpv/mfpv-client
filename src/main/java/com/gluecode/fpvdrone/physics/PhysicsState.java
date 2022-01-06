@@ -6,9 +6,11 @@ import com.gluecode.fpvdrone.input.ControllerReader;
 import com.gluecode.fpvdrone.util.SettingsLoader;
 import com.jme3.math.Vector3f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.util.Mth;
+//import com.mojang.math.Vector3d;
 
 public class PhysicsState {
   private static IPhysicsCore core = new DefaultPhysicsCore();
@@ -38,7 +40,7 @@ public class PhysicsState {
     }
     
     Minecraft minecraft = Minecraft.getInstance();
-    ClientPlayerEntity entity = minecraft.player;
+    Player entity = minecraft.player;
   
     if (entity == null) {
       return nextVelocity;
@@ -54,24 +56,23 @@ public class PhysicsState {
     }
   
     Vector3f displacement = nextVelocity.mult(elapsed);
-    Vector3d desired = new Vector3d(
+    Vec3 desired = new Vec3(
       displacement.x,
       displacement.y,
       displacement.z
     );
     float desiredSpeed = nextVelocity.length();
     if (entity.noPhysics) {
-      entity.setBoundingBox(entity.getBoundingBox().move(desired));
-      entity.setLocationFromBoundingbox();
+      entity.setPos(entity.getX() + desired.x, entity.getY() + desired.y, entity.getZ() + desired.z);
       return nextVelocity;
     } else {
-      Vector3d clipped = entity.collide(desired);
+      Vec3 clipped = entity.collide(desired);
     
-      boolean collidedHorizontally = !MathHelper.equal(
+      boolean collidedHorizontally = !Mth.equal(
         desired.x,
         clipped.x
-      ) || !MathHelper.equal(desired.z, clipped.z);
-      boolean collidedVertically = !MathHelper.equal(
+      ) || !Mth.equal(desired.z, clipped.z);
+      boolean collidedVertically = !Mth.equal(
         desired.y,
         clipped.y
       );
@@ -84,23 +85,22 @@ public class PhysicsState {
           clipped,
           nextVelocity
         );
-        entity.setBoundingBox(entity.getBoundingBox()
-          .move(new Vector3d(
-            collisionResults.displacement.x,
-            collisionResults.displacement.y,
-            collisionResults.displacement.z
-          )));
-        entity.setLocationFromBoundingbox();
+
+        entity.setPos(entity.getX() + collisionResults.displacement.x, entity.getY() + collisionResults.displacement.y, collisionResults.displacement.z);
+
         return collisionResults.velocity;
       }
     
       entity.setBoundingBox(entity.getBoundingBox().move(clipped));
       if (SettingsLoader.currentUseRealtimePhysics) {
-        entity.setPosAndOldPos(entity.getX(), entity.getY(), entity.getZ());
+        entity.setPos(entity.getX(), entity.getY(), entity.getZ());
+        entity.setOldPosAndRot();
       }
-      entity.setLocationFromBoundingbox();
+      //entity.setLocationFromBoundingbox();
+      AABB axisalignedbb = entity.getBoundingBox();
+      entity.setPosRaw((axisalignedbb.minX + axisalignedbb.maxX) / 2.0D, axisalignedbb.minY, (axisalignedbb.minZ + axisalignedbb.maxZ) / 2.0D);
     
-      Vector3d clippedVelocity = clipped.scale(1f / elapsed);
+      Vec3 clippedVelocity = clipped.scale(1f / elapsed);
       return new Vector3f(
         (float) clippedVelocity.x,
         (float) clippedVelocity.y,

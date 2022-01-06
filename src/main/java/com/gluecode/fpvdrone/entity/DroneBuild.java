@@ -5,7 +5,7 @@ import com.gluecode.fpvdrone.input.ControllerReader;
 import com.gluecode.fpvdrone.physics.PhysicsConstants;
 import com.gluecode.fpvdrone.util.SettingsLoader;
 import com.jme3.math.FastMath;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class DroneBuild {
   public static float self_red;
@@ -147,7 +147,7 @@ public class DroneBuild {
   public static float getCameraAngle() {
     if (ControllerReader.getCustomAngle()) {
       float i = (ControllerReader.getAngle() + 1f) * 0.5f;
-      return Math.round(MathHelper.lerp(i, 10f / 5f, 80f / 5f)) * 5f;
+      return Math.round(Mth.lerp(i, 10f / 5f, 80f / 5f)) * 5f;
     } else {
       return getSwitchlessAngle();
     }

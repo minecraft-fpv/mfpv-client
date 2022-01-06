@@ -2,7 +2,8 @@ package com.gluecode.fpvdrone.physics;
 
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import net.minecraft.util.math.vector.Vector3d;
+
+import net.minecraft.world.phys.Vec3;
 
 public class PhysicsCollision {
   private static final float elastic = 0.2f;
@@ -12,7 +13,7 @@ public class PhysicsCollision {
   * */
   public static CollisionResults getCollisionResults(
     Vector3f displacement,
-    Vector3d clipped,
+    Vec3 clipped,
     Vector3f preCollisionVelocity
   ) {
     Vector3f finalDisplacement = null;

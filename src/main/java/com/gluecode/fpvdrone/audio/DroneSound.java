@@ -4,7 +4,7 @@ import com.gluecode.fpvdrone.entity.DroneBuild;
 import com.gluecode.fpvdrone.input.ControllerReader;
 import com.gluecode.fpvdrone.physics.PhysicsState;
 import com.jme3.math.FastMath;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -14,9 +14,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class DroneSound extends AbstractTickableSoundInstance {
-  private final ClientPlayerEntity player;
+  private final LocalPlayer player;
   
-  public DroneSound(ClientPlayerEntity playerIn) {
+  public DroneSound(LocalPlayer playerIn) {
     super(SoundEvents.ELYTRA_FLYING, SoundSource.PLAYERS);
     this.player = playerIn;
     this.looping = true;
@@ -26,7 +26,7 @@ public class DroneSound extends AbstractTickableSoundInstance {
   
   public void tick() {
     //        float throt = FastMath.clamp((InputHandler.throttle + 1F) * 0.5F, 0F, 1.0F);
-    if (!this.player.removed && ControllerReader.getArm()) {
+    if (!this.player.isRemoved() && ControllerReader.getArm()) {
       this.x = (float) this.player.getX();
       this.y = (float) this.player.getY();
       this.z = (float) this.player.getZ();
