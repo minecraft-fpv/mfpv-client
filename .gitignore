@@ -14,7 +14,8 @@ proguardconf
 version.json
 settings.gradle
 .DS_Store
-
+.vscode
+bin
 # For Manifold:
 AdvancedPhysicsCore.java
 build.properties

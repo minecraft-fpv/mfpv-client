@@ -10,12 +10,12 @@ import com.gluecode.fpvdrone.network.packet.PacketHandler;
 import com.gluecode.fpvdrone.util.SettingsLoader;
 import com.jme3.math.Quaternion;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -48,7 +48,7 @@ public class PhysicsEvent {
   Normally, physics runs before lastPhysicsTime is updated.
   * */
   @SubscribeEvent
-  public static void onGuiOpen(GuiScreenEvent.DrawScreenEvent.Post event) {
+  public static void onGuiOpen(ScreenEvent.DrawScreenEvent.Post event) {
     if (ControllerReader.getArm()) {
       playerTime = System.currentTimeMillis();
     }
@@ -69,7 +69,7 @@ public class PhysicsEvent {
   public static void handleMovement(LivingEvent.LivingUpdateEvent event) {
     if (ControllerReader.getArm()) {
       Minecraft minecraft = Minecraft.getInstance();
-      ClientPlayerEntity player = minecraft.player;
+      LocalPlayer player = minecraft.player;
       if (event.getEntity() == player) {
         if (SettingsLoader.currentUseRealtimePhysics) {
           //        player.setPosAndOldPos(player.getX(), player.getY(), player.getZ());
@@ -104,7 +104,7 @@ public class PhysicsEvent {
       if (event.phase == TickEvent.Phase.END) {
         // Update player's drone state for third person mode.
         Minecraft minecraft = Minecraft.getInstance();
-        PlayerEntity player = minecraft.player;
+        Player player = minecraft.player;
         if (player != null) {
           Quaternion rot = (new Quaternion());
           rot.lookAt(PhysicsState.getCore().getDroneLook(), PhysicsState.getCore().getDroneUp());
@@ -135,7 +135,7 @@ public class PhysicsEvent {
   @SubscribeEvent(priority = EventPriority.LOWEST)
   public static void sendSelfToServer(LivingEvent.LivingUpdateEvent event) {
     Minecraft minecraft = Minecraft.getInstance();
-    ClientPlayerEntity player = minecraft.player;
+    LocalPlayer player = minecraft.player;
     if (player == null) {
       return;
     }
