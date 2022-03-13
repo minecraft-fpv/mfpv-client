@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -45,7 +45,7 @@ public class BuildModeRenderer {
     BufferBuilder buffer = tessellator.getBuilder();
     applyLineMode();
 
-    Vector3d eyePosMC = player.getEyePosition(event.getPartialTicks());
+    Vec3 eyePosMC = player.getEyePosition(event.getPartialTicks());
     com.jme3.math.Vector3f eyePos = new com.jme3.math.Vector3f(
       (float) eyePosMC.x,
       (float) eyePosMC.y,

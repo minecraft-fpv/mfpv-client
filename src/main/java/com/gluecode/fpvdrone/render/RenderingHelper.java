@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector4f;
 
@@ -30,7 +30,7 @@ public class RenderingHelper {
     int scaledWidth = mainWindow.getGuiScaledWidth();
     int scaledHeight = mainWindow.getGuiScaledHeight();
 
-    Vector3d eyePosMC = renderViewEntity.getEyePosition(partialTicks);
+    Vec3 eyePosMC = renderViewEntity.getEyePosition(partialTicks);
     com.jme3.math.Vector3f eyePos = new com.jme3.math.Vector3f(
       (float) eyePosMC.x,
       (float) eyePosMC.y,

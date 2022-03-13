@@ -186,7 +186,7 @@ public class LapRender {
   //    // Switch to custom shader program
   //    GL20.glUseProgram(gateShader.program);
   //
-  //    Vector3d eyePosMC = player.getEyePosition(event.getPartialTicks());
+  //    Vec3 eyePosMC = player.getEyePosition(event.getPartialTicks());
   //    com.jme3.math.Vector3f eyePos = new com.jme3.math.Vector3f((float) eyePosMC.x, (float) eyePosMC.y, (float) eyePosMC.z);
   //
   //    Tessellator tessellator = Tessellator.getInstance();
@@ -271,7 +271,7 @@ public class LapRender {
     int scaledHeight = mainWindow.getGuiScaledHeight();
     
     
-    Vector3d eyePosMC = player.getEyePosition(event.getPartialTicks());
+    Vec3 eyePosMC = player.getEyePosition(event.getPartialTicks());
     com.jme3.math.Vector3f eyePos = new com.jme3.math.Vector3f(
       (float) eyePosMC.x,
       (float) eyePosMC.y,

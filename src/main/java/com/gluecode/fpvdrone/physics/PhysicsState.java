@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.Mth;
-//import com.mojang.math.Vector3d;
+//import com.mojang.math.Vec3;
 
 public class PhysicsState {
   private static IPhysicsCore core = new DefaultPhysicsCore();

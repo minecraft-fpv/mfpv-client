@@ -13,7 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.math.vector.Vector3f;
 
 import java.util.UUID;
@@ -103,7 +103,7 @@ public class DroneRenderer extends LivingRenderer<AbstractClientPlayerEntity, Dr
     int overlay = getOverlayCoords(entityIn, this.getWhiteOverlayProgress(entityIn, partialTicks));
     
     matrixStackIn.pushPose();
-    Vector3d vector3d = Minecraft.getInstance().gameRenderer.getMainCamera()
+    Vec3 vector3d = Minecraft.getInstance().gameRenderer.getMainCamera()
       .getPosition();
     double camX = vector3d.x();
     double camY = vector3d.y();
@@ -126,7 +126,7 @@ public class DroneRenderer extends LivingRenderer<AbstractClientPlayerEntity, Dr
     double x = d0 - camX;
     double y = d1 - camY;
     double z = d2 - camZ;
-    Vector3d vector3e = this.getDispatcher()
+    Vec3 vector3e = this.getDispatcher()
       .getRenderer(entityIn)
       .getRenderOffset(entityIn, partialTicks);
     double e2 = x + vector3e.x();

@@ -23,7 +23,7 @@ public class DebugRenderer {
 //
 //    ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getMainCamera();
 //
-//    Vector3d eyePosMC = info.getPosition();
+//    Vec3 eyePosMC = info.getPosition();
 //    Vector3f eyePos = new Vector3f(
 //      (float) eyePosMC.x,
 //      (float) eyePosMC.y,

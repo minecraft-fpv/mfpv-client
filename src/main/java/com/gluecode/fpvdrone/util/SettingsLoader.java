@@ -9,7 +9,7 @@ import com.gluecode.fpvdrone.input.ControllerReader;
 import com.gluecode.fpvdrone.network.packet.DroneBuildPacket;
 import com.gluecode.fpvdrone.network.packet.PacketHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -245,7 +245,7 @@ public class SettingsLoader {
       properties.store(new FileOutputStream(file), "Fpv Settings");
       Main.LOGGER.info("Saved FPV settings.");
       
-      ClientPlayerEntity player = Minecraft.getInstance().player;
+      LocalPlayer player = Minecraft.getInstance().player;
       if (player != null) {
         UUID uuid = player.getUUID();
         Main.droneRenderers.remove(uuid); // reset self model
