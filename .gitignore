@@ -17,5 +17,4 @@ settings.gradle
 .vscode
 bin
 # For Manifold:
-AdvancedPhysicsCore.java
 build.properties
