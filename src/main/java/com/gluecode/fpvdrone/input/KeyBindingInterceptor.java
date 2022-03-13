@@ -1,25 +1,25 @@
 package com.gluecode.fpvdrone.input;
 
 import com.gluecode.fpvdrone.Main;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.KeyMapping;
 
-public class KeyBindingInterceptor extends KeyBinding {
-  protected KeyBinding interceptedKeyBinding;
+public class KeyMappingInterceptor extends KeyMapping {
+  protected KeyMapping interceptedKeyMapping;
   private boolean interceptionActive;
   private int interceptedPressTime;
   
   /**
    * Create an Interceptor based on an existing binding.
    * The initial interception mode is OFF.
-   * If existingKeyBinding is already a KeyBindingInterceptor, a reinitialised copy will be created but no further effect.
+   * If existingKeyMapping is already a KeyMappingInterceptor, a reinitialised copy will be created but no further effect.
    *
-   * @param existingKeyBinding - the binding that will be intercepted.
+   * @param existingKeyMapping - the binding that will be intercepted.
    */
-  public KeyBindingInterceptor(KeyBinding existingKeyBinding) {
+  public KeyMappingInterceptor(KeyMapping existingKeyMapping) {
     super(
-      existingKeyBinding.getName(),
-      existingKeyBinding.getKey().getValue(),
-      existingKeyBinding.getCategory()
+      existingKeyMapping.getName(),
+      existingKeyMapping.getKey().getValue(),
+      existingKeyMapping.getCategory()
     );
     
     this.interceptionActive = false;
@@ -27,14 +27,14 @@ public class KeyBindingInterceptor extends KeyBinding {
     this.clickCount = 0;
     this.interceptedPressTime = 0;
     
-    if (existingKeyBinding instanceof KeyBindingInterceptor) {
-      interceptedKeyBinding = ((KeyBindingInterceptor) existingKeyBinding)
-        .getOriginalKeyBinding();
+    if (existingKeyMapping instanceof KeyMappingInterceptor) {
+      interceptedKeyMapping = ((KeyMappingInterceptor) existingKeyMapping)
+        .getOriginalKeyMapping();
     } else {
-      interceptedKeyBinding = existingKeyBinding;
+      interceptedKeyMapping = existingKeyMapping;
     }
     
-    KeyBinding.resetMapping();
+    KeyMapping.resetMapping();
   }
   
   public void setInterceptionActive(boolean newMode) {
@@ -47,9 +47,9 @@ public class KeyBindingInterceptor extends KeyBinding {
   public boolean isDown() {
     if (interceptionActive) return false;
     return super.isDown();
-    //    Main.LOGGER.info("a: " + interceptedKeyBinding.isDown);
+    //    Main.LOGGER.info("a: " + interceptedKeyMapping.isDown);
     //    copyKeyCodeToOriginal();
-    //    return interceptedKeyBinding.isDown;
+    //    return interceptedKeyMapping.isDown;
   }
   
   public boolean isKeyReallyDown() {
@@ -78,9 +78,9 @@ public class KeyBindingInterceptor extends KeyBinding {
   /**
    * A better name for this method would be retrieveClick.
    * If interception is on, resets .isDown and .clickCount to zero.
-   * Otherwise, copies these from the intercepted KeyBinding.
+   * Otherwise, copies these from the intercepted KeyMapping.
    *
-   * @return If interception is on, this will return false; Otherwise, it will pass on any clicks in the intercepted KeyBinding
+   * @return If interception is on, this will return false; Otherwise, it will pass on any clicks in the intercepted KeyMapping
    */
   @Override
   public boolean consumeClick() {
@@ -103,21 +103,21 @@ public class KeyBindingInterceptor extends KeyBinding {
     }
   }
   
-  public KeyBinding getOriginalKeyBinding() {
-    return interceptedKeyBinding;
+  public KeyMapping getOriginalKeyMapping() {
+    return interceptedKeyMapping;
   }
   
   protected void copyClickInfoFromOriginal() {
-    this.clickCount += interceptedKeyBinding.clickCount;
-    this.interceptedPressTime += interceptedKeyBinding.clickCount;
-    interceptedKeyBinding.clickCount = 0;
-    this.isDown = interceptedKeyBinding.isDown;
+    this.clickCount += interceptedKeyMapping.clickCount;
+    this.interceptedPressTime += interceptedKeyMapping.clickCount;
+    interceptedKeyMapping.clickCount = 0;
+    this.isDown = interceptedKeyMapping.isDown;
   }
   
   protected void copyKeyCodeToOriginal() {
     // only copy if necessary
-    if (this.key != interceptedKeyBinding.key) {
-      this.key = interceptedKeyBinding.key;
+    if (this.key != interceptedKeyMapping.key) {
+      this.key = interceptedKeyMapping.key;
       resetMapping();
     }
   }

@@ -11,9 +11,9 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.list.KeyBindingList;
+import net.minecraft.client.gui.widget.list.KeyMappingList;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
@@ -66,7 +66,7 @@ public class CalibrateKeyboardScreen extends EmptyListScreen {
       if (!net.minecraftforge.client.settings.KeyModifier.isKeyCodeModifier(KeyManager.armKey.getKey())) {
         this.listening = false;
       }
-      KeyBinding.resetMapping();
+      KeyMapping.resetMapping();
       return true;
     } else {
       return super.keyPressed(keyCode, scanCode, modifiers);
@@ -77,7 +77,7 @@ public class CalibrateKeyboardScreen extends EmptyListScreen {
   protected void init() {
     super.init();
     
-//    this.addWidget(new KeyBindingList.KeyEntry(InputHandler.armKey, new StringTextComponent("huh?")));
+//    this.addWidget(new KeyMappingList.KeyEntry(InputHandler.armKey, new StringTextComponent("huh?")));
     Minecraft minecraft = Minecraft.getInstance();
     String armLabel = I18n.get("key.fpvdrone.arm");
     int labelWidth = minecraft.font.width(armLabel);
@@ -151,7 +151,7 @@ public class CalibrateKeyboardScreen extends EmptyListScreen {
     );
   }
   
-  // This code is copied from KeyBindingList.KeyEntry.render:
+  // This code is copied from KeyMappingList.KeyEntry.render:
   public boolean[] getConflicts() {
     boolean[] results = new boolean[2];
     
@@ -159,7 +159,7 @@ public class CalibrateKeyboardScreen extends EmptyListScreen {
     results[1] = true; // less severe form of conflict, like SHIFT conflicting with SHIFT+G
     if (!KeyManager.armKey.isUnbound()) {
       Minecraft minecraft = Minecraft.getInstance();
-      for(KeyBinding keybinding : minecraft.options.keyMappings) {
+      for(KeyMapping keybinding : minecraft.options.keyMappings) {
         if (keybinding != KeyManager.armKey && KeyManager.armKey.same(keybinding)) {
           results[0] = true;
           results[1] &= KeyManager.armKey.hasKeyCodeModifierConflict(keybinding);

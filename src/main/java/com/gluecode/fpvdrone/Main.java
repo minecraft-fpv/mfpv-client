@@ -18,10 +18,10 @@ import net.minecraft.client.settings.PointOfView;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.Pose;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -60,8 +60,8 @@ public class Main {
   public static final Logger LOGGER = LogManager.getLogger(); //log4j logger.
   
   //  public static final Method setPose = ObfuscationReflectionHelper.findMethod(Entity.class, "func_213301_b", Pose.class);
-  public static Map<UUID, Vector3d> entityPosition = Maps.newConcurrentMap();
-  public static Map<UUID, Vector3d> entityVelocity = Maps.newConcurrentMap();
+  public static Map<UUID, Vec3> entityPosition = Maps.newConcurrentMap();
+  public static Map<UUID, Vec3> entityVelocity = Maps.newConcurrentMap();
   public static Map<UUID, Boolean> entityArmStates = Maps.newConcurrentMap();
   public static Map<UUID, DroneBuild> droneBuilds = Maps.newConcurrentMap();
   public static Map<UUID, String> cachedPlayerNames = Maps.newConcurrentMap();
@@ -153,14 +153,14 @@ public class Main {
       //          boolean collided = player.collidedHorizontally || player.collidedVertically;
       //          if (collided) {
       //            // Extrapolate the lastVelocity to find the collision results.
-      //            Vector3d lastVelocity = entityVelocity.get(player.getUUID());
+      //            Vec3 lastVelocity = entityVelocity.get(player.getUUID());
       //            if (lastVelocity != null) {
       //              // note this is not a perfect solution. A proper solution should use the previous position, not the current position, to get the clipped displacement.
       //              // todo: make getAllowedMovement work on previous position.
       //              // Maybe we can move the player back, run getAllowedMovement, then move the player forward?
-      //              Vector3d clipped = player.collide(lastVelocity);
+      //              Vec3 clipped = player.collide(lastVelocity);
       //
-      //              Vector3d diff = lastVelocity.subtract(clipped);
+      //              Vec3 diff = lastVelocity.subtract(clipped);
       //              Main.LOGGER.info("diff.length(): " + diff.length());
       //
       //              Vector3f lastVelocityF = new Vector3f((float) lastVelocity.x, (float) lastVelocity.y, (float) lastVelocity.z);
@@ -182,9 +182,9 @@ public class Main {
       //          }
       //        }
       //
-      //        Vector3d lastPosition = entityPosition.get(player.getUUID());
+      //        Vec3 lastPosition = entityPosition.get(player.getUUID());
       //        if (lastPosition != null) {
-      //          Vector3d velocity = player.position().subtract(lastPosition);
+      //          Vec3 velocity = player.position().subtract(lastPosition);
       //          entityVelocity.put(player.getUUID(), velocity);
       //        }
       //        entityPosition.put(player.getUUID(), player.position());

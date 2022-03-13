@@ -1,7 +1,7 @@
 package com.gluecode.fpvdrone.input;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHelper;
+import net.minecraft.client.MouseHandler;
 
 public class MouseManager {
   public static float mouseX = 0;
@@ -17,17 +17,17 @@ public class MouseManager {
     guiOpen = nextGuiOpen;
     
     if (!toggleGui) {
-      MouseHelper mouseHelper = Minecraft.getInstance().mouseHandler;
-      double nextMouseX = mouseHelper.xpos();
-      double nextMouseY = mouseHelper.ypos();
+      MouseHandler MouseHandler = Minecraft.getInstance().mouseHandler;
+      double nextMouseX = MouseHandler.xpos();
+      double nextMouseY = MouseHandler.ypos();
       mouseDiffX = (float) nextMouseX - mouseX;
       mouseDiffY = (float) nextMouseY - mouseY;
       mouseX = (float) nextMouseX;
       mouseY = (float) nextMouseY;
     } else {
-      MouseHelper mouseHelper = Minecraft.getInstance().mouseHandler;
-      double nextMouseX = mouseHelper.xpos();
-      double nextMouseY = mouseHelper.ypos();
+      MouseHandler MouseHandler = Minecraft.getInstance().mouseHandler;
+      double nextMouseX = MouseHandler.xpos();
+      double nextMouseY = MouseHandler.ypos();
       mouseDiffX = 0;
       mouseDiffY = 0;
       mouseX = (float) nextMouseX;

@@ -9,12 +9,12 @@ import com.gluecode.fpvdrone.physics.PhysicsState;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import net.minecraft.client.GameSettings;
+import net.minecraft.client.Options;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Pose;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.Mod;
@@ -31,32 +31,32 @@ import java.util.function.IntConsumer;
 public class ControllerReader {
   private static final float rads = (float) (Math.PI / 180);
   private static final float degs = (float) (180 / Math.PI);
-  
+
   protected static int controllerId;
   public static String controllerName;
   protected static FloatBuffer axisBuffer;
   protected static ByteBuffer buttonBuffer;
   private static float[] axis;
   private static byte[] button;
-  
+
   public static long angleChangeTime = System.currentTimeMillis();
   private static float angleAtNotify = 0;
-  
+
   public static boolean rawArm = false;
   private static long lastArm = System.currentTimeMillis();
-  
+
   // ranges is an array twice as big as axis.
   // [min0, max0, min1, max1, min2, max2, min3, max3, min4, max4]
   private static float[] range;
   private static float[] rangeSnapshot;
   private static long lastRangeChangeTime;
-  
+
   private static IntConsumer onChannelChanged;
   private static Consumer<float[]> onRangeFound;
   private static float[] axisSnapshot;
   private static byte[] buttonSnapshot;
   private static final float minDetectionDiff = 0.3f;
-  
+
   protected static float throttle = 0;
   protected static float yaw = 0;
   protected static float pitch = 0;
@@ -66,17 +66,17 @@ public class ControllerReader {
   protected static boolean armWaitOneTick = false;
   protected static boolean customAngle = false;
   protected static boolean rightClick = false;
-  
+
   // Save non-armed FOV when arming so that it can be restored when disarming.
   private static float disarmFov = 70;
-  
+
   public static void init() {
     axis = new float[8];
     button = new byte[24];
-    
+
     GLFW.glfwSetJoystickCallback(new JoystickCallback());
   }
-  
+
   public static void joystickCallback(int jid, int event) {
     if (event == GLFW.GLFW_CONNECTED) {
       boolean alreadyConnected = controllerId != -1;
@@ -88,7 +88,7 @@ public class ControllerReader {
         controllerId = jid;
         controllerName = GLFW.glfwGetJoystickName(jid);
         Main.LOGGER.debug(controllerName + " connected.");
-        
+
         axisBuffer = GLFW.glfwGetJoystickAxes(controllerId);
         buttonBuffer = GLFW.glfwGetJoystickButtons(controllerId);
         if (axis == null || axisBuffer.remaining() != axis.length) {
@@ -107,13 +107,13 @@ public class ControllerReader {
       buttonBuffer = null;
     }
   }
-  
+
   private static void connectController() {
     if (controllerId == -1) return;
     if (GLFW.glfwJoystickPresent(controllerId)) {
       controllerName = GLFW.glfwGetJoystickName(controllerId);
       Main.LOGGER.debug(controllerName + " connected.");
-      
+
       axisBuffer = GLFW.glfwGetJoystickAxes(controllerId);
       buttonBuffer = GLFW.glfwGetJoystickButtons(controllerId);
       if (axis == null || axisBuffer.remaining() != axis.length) {
@@ -124,21 +124,21 @@ public class ControllerReader {
       }
     }
   }
-  
+
   public static int getAxisLength() {
     if (axis == null) {
       axis = new float[8];
     }
     return axis.length;
   }
-  
+
   public static int getButtonLength() {
     if (button == null) {
       button = new byte[24];
     }
     return button.length;
   }
-  
+
   public static void setControllerId(int value) {
     controllerId = value;
     if (controllerId < 0) {
@@ -149,7 +149,7 @@ public class ControllerReader {
     }
     connectController();
   }
-  
+
   public static void setControllerIdFromName(String name) {
     if (name.equalsIgnoreCase("")) {
       return;
@@ -164,7 +164,7 @@ public class ControllerReader {
       }
     }
   }
-  
+
   public static float[] convertToPlain(JSONArray jsonArray) {
     float[] floatArray = new float[jsonArray.size()];
     for (int i = 0; i < jsonArray.size(); i++) {
@@ -181,7 +181,7 @@ public class ControllerReader {
     }
     return floatArray;
   }
-  
+
   public static void startInputListening(IntConsumer onChannelChanged) {
     ControllerReader.onChannelChanged = (int channel) -> {
       ControllerReader.onChannelChanged = null;
@@ -190,10 +190,10 @@ public class ControllerReader {
     axisSnapshot = axis.clone();
     buttonSnapshot = button.clone();
   }
-  
+
   public static void startRangeListening(Consumer<float[]> onRangeFound) {
     if (axis == null) return;
-    
+
     ControllerReader.onRangeFound = (float[] range) -> {
       ControllerReader.onRangeFound = null;
       onRangeFound.accept(range);
@@ -206,34 +206,34 @@ public class ControllerReader {
     }
     lastRangeChangeTime = System.currentTimeMillis();
   }
-  
+
   private static float safeReadAxisWithRange(int channel) {
     float raw = 0;
     if (axis != null && 0 <= channel && channel <= axis.length - 1) {
       raw = axis[channel];
     }
-    
+
     float min = safeReadRangeMin(channel);
     float max = safeReadRangeMax(channel);
-    
+
     if (max - min < FastMath.ZERO_TOLERANCE) {
       // This channel hasn't been range tested.
       max = 1;
       min = -1;
     }
-    
+
     if (raw < min) {
       return -1;
     }
     if (raw > max) {
       return 1;
     }
-    
+
     float d = raw - min;
     float p = d / (max - min); // [0 - 1]
     return p * 2f - 1f;
   }
-  
+
   public static float safeReadRangeMin(int channel) {
     int j = channel * 2;
     float[] safeRange = range !=
@@ -244,7 +244,7 @@ public class ControllerReader {
       return -1;
     }
   }
-  
+
   public static float safeReadRangeMax(int channel) {
     int j = channel * 2;
     float[] safeRange = range !=
@@ -255,7 +255,7 @@ public class ControllerReader {
       return 1;
     }
   }
-  
+
   public static float safeReadRangeSnapshotMin(int channel) {
     int j = channel * 2;
     float[] safeRange = rangeSnapshot != null ? rangeSnapshot : convertToPlain(
@@ -266,7 +266,7 @@ public class ControllerReader {
       return -1;
     }
   }
-  
+
   public static float safeReadRangeSnapshotMax(int channel) {
     int j = channel * 2;
     float[] safeRange = rangeSnapshot != null ? rangeSnapshot : convertToPlain(
@@ -277,7 +277,7 @@ public class ControllerReader {
       return 1;
     }
   }
-  
+
   private static float getAxisRaw(int channel) {
     if (axis == null) {
       return 0;
@@ -290,7 +290,7 @@ public class ControllerReader {
     }
     return axis[channel];
   }
-  
+
   private static float getAxisSnapshotRaw(int channel) {
     if (axisSnapshot == null) {
       return 0;
@@ -303,13 +303,13 @@ public class ControllerReader {
     }
     return axisSnapshot[channel];
   }
-  
+
   public static float getAxisDiffOnChannel(int channel) {
     float axisValue = getAxisRaw(channel);
     float axisSnapshotValue = getAxisSnapshotRaw(channel);
     return axisValue - axisSnapshotValue;
   }
-  
+
   private static float[] getAxisDiff() {
     float[] diff = new float[axis.length];
     for (int i = 0; i < diff.length; i++) {
@@ -317,7 +317,7 @@ public class ControllerReader {
     }
     return diff;
   }
-  
+
   private static boolean[] getButtonDiff() {
     boolean[] diff = new boolean[button.length];
     for (int i = 0; i < diff.length; i++) {
@@ -325,7 +325,7 @@ public class ControllerReader {
     }
     return diff;
   }
-  
+
   private static int getChangedAxis() {
     float[] axisDiff = getAxisDiff();
     int channel = -1;
@@ -336,7 +336,7 @@ public class ControllerReader {
     }
     return channel;
   }
-  
+
   private static int getChangedButton() {
     boolean[] buttonDiff = getButtonDiff();
     int channel = -1;
@@ -347,7 +347,7 @@ public class ControllerReader {
     }
     return channel;
   }
-  
+
   private static boolean getButtonValue(int channel, boolean invert) {
     if (channel >= 0) {
       return button[channel] ==
@@ -362,7 +362,7 @@ public class ControllerReader {
       }
     }
   }
-  
+
   public static String getControllerName(int id) {
     if (id == -1) {
       return "";
@@ -373,45 +373,45 @@ public class ControllerReader {
       return "";
     }
   }
-  
+
   public static int getControllerId() {
     return controllerId;
   }
-  
+
   public static void poll() {
     throttle = 0;
     roll = 0;
     pitch = 0;
     yaw = 0;
     ang = 0;
-    
+
     if (controllerId != -1) {
       if (GLFW.glfwJoystickPresent(controllerId)) {
         try {
           if (range == null) {
             ControllerConfig.setRange(ControllerConfig.getDefaultRange());
           }
-          
+
           axisBuffer = GLFW.glfwGetJoystickAxes(controllerId);
           buttonBuffer = GLFW.glfwGetJoystickButtons(controllerId);
-          
+
           if (axis == null || axisBuffer.remaining() != axis.length) {
             axis = new float[axisBuffer.remaining()];
           }
-          
+
           if (button == null ||
               buttonBuffer.remaining() != button.length) {
             button = new byte[buttonBuffer.remaining()];
           }
-          
+
           axisBuffer.get(axis);
           buttonBuffer.get(button);
-          
+
           if (onChannelChanged != null) {
             // We are listening for the next channel change.
             int changedButton = getChangedButton();
             if (changedButton != -1) {
-              // +8 because FpvKeyBindingList expects buttons to be shifted up.
+              // +8 because FpvKeyMappingList expects buttons to be shifted up.
               onChannelChanged.accept(changedButton +
                                       getAxisLength());
             } else {
@@ -420,7 +420,7 @@ public class ControllerReader {
                 changedAxis);
             }
           }
-          
+
           if (onRangeFound != null) {
             // We are listening for range changes.
             for (int i = 0; i < axis.length; i++) {
@@ -434,7 +434,7 @@ public class ControllerReader {
                 lastRangeChangeTime = System.currentTimeMillis();
               }
             }
-            
+
             float diffThottle = safeReadRangeSnapshotMax(ControllerConfig.getThrottleChannel()) -
                                 safeReadRangeSnapshotMin(ControllerConfig.getThrottleChannel());
             float diffYaw = safeReadRangeSnapshotMax(ControllerConfig.getYawChannel()) -
@@ -443,7 +443,7 @@ public class ControllerReader {
                               safeReadRangeSnapshotMin(ControllerConfig.getPitchChannel());
             float diffRoll = safeReadRangeSnapshotMax(ControllerConfig.getRollChannel()) -
                              safeReadRangeSnapshotMin(ControllerConfig.getRollChannel());
-            
+
             if (
               diffThottle >= minDetectionDiff &&
               diffYaw >= minDetectionDiff &&
@@ -454,24 +454,24 @@ public class ControllerReader {
               onRangeFound.accept(rangeSnapshot);
             }
           }
-          
+
           throttle = (ControllerConfig.getInvertThrottle() ? -1f : 1f) * safeReadAxisWithRange(
             ControllerConfig.getThrottleChannel());
           roll = (ControllerConfig.getInvertRoll() ? -1f : 1f) * safeReadAxisWithRange(ControllerConfig.getRollChannel());
           pitch = (ControllerConfig.getInvertPitch() ? -1f : 1f) *
                   safeReadAxisWithRange(ControllerConfig.getPitchChannel());
           yaw = (ControllerConfig.getInvertYaw() ? -1f : 1f) * safeReadAxisWithRange(ControllerConfig.getYawChannel());
-          
+
           if (ControllerConfig.getAngleChannel() < axis.length) {
             ang = (ControllerConfig.getInvertAngle() ? -1f : 1f) * axis[ControllerConfig.getAngleChannel()];
           }
-          
+
           if (FastMath.abs(angleAtNotify - ang) > 0.05) {
             // Angle has changed enough to trigger notification
             angleAtNotify = ang;
             angleChangeTime = System.currentTimeMillis();
           }
-          
+
           boolean prevArm = rawArm;
           boolean prevRightClick = rightClick;
           rawArm = getButtonValue(ControllerConfig.getArmChannel(), ControllerConfig.getInvertArm());
@@ -489,7 +489,7 @@ public class ControllerReader {
           if (prevRightClick != rightClick) {
             handleRightClickToggle();
           }
-          
+
           //      String a = "";
           //      for (int i = 0; i < button.length; i++) {
           //        a += button[i] + ", ";
@@ -501,7 +501,7 @@ public class ControllerReader {
       }
     }
   }
-  
+
   public static void handleArmToggle() {
     // To figure out what this code does,
     // look at the spec below.
@@ -511,21 +511,21 @@ public class ControllerReader {
     // it looks at the current state,
     // then figures out the next state based on
     // the spec's rules.
-    
+
     // "noop" means "no-operation". It means "do nothing".
-    
+
     // momentary:
     // !arm && rawArm -> arm
     // arm && !rawArm too soon -> arm noop
     // arm && rawArm -> arm noop
     // arm && !rawArm waited -> !arm
-    
+
     // switch:
     // !arm && rawArm -> arm
     // arm && !rawArm -> !arm
-    
+
     boolean nextArm = arm;
-    
+
     if (!arm && rawArm) {
       // attempt to arm
       if ((throttle + 1f) / 2f > 0.05f) {
@@ -541,7 +541,7 @@ public class ControllerReader {
         // too soon. likely a momentary click
         return;
       }
-      
+
       nextArm = true;
       armWaitOneTick = false;
     } else if (arm && !rawArm) {
@@ -555,22 +555,22 @@ public class ControllerReader {
       }
       nextArm = false;
     }
-    
+
     Minecraft minecraft = Minecraft.getInstance();
-    
-    ClientPlayerEntity player = minecraft.player;
+
+    LocalPlayer player = minecraft.player;
     if (player != null) {
       // Disable normal keyboard movement
-      GameSettings gameSettings = minecraft.options;
-      ((KeyBindingInterceptor) gameSettings.keyUp).setInterceptionActive(
+      Options options = minecraft.options;
+      ((KeyMappingInterceptor) options.keyUp).setInterceptionActive(
         nextArm);
-      ((KeyBindingInterceptor) gameSettings.keyDown).setInterceptionActive(
+      ((KeyMappingInterceptor) options.keyDown).setInterceptionActive(
         nextArm);
-      ((KeyBindingInterceptor) gameSettings.keyLeft).setInterceptionActive(
+      ((KeyMappingInterceptor) options.keyLeft).setInterceptionActive(
         nextArm);
-      ((KeyBindingInterceptor) gameSettings.keyRight).setInterceptionActive(
+      ((KeyMappingInterceptor) options.keyRight).setInterceptionActive(
         nextArm);
-      ((KeyBindingInterceptor) gameSettings.keyJump).setInterceptionActive(
+      ((KeyMappingInterceptor) options.keyJump).setInterceptionActive(
         nextArm);
       
       if (nextArm) {
@@ -598,7 +598,7 @@ public class ControllerReader {
         player.setPose(Pose.STANDING);
         
         Vector3f motion = PhysicsState.getCore().getVelocity().mult(0.05f); // 1 tick
-        player.setDeltaMovement(new Vector3d(motion.x, motion.y, motion.z));
+        player.setDeltaMovement(new Vec3(motion.x, motion.y, motion.z));
         
         minecraft.options.fov = disarmFov;
         
@@ -621,8 +621,8 @@ public class ControllerReader {
   public static void handleRightClickToggle() {
     Minecraft minecraft = Minecraft.getInstance();
     if (minecraft != null) {
-      KeyBinding kb = minecraft.options.keyUse;
-      KeyBinding.set(kb.getKey(), ControllerReader.rightClick);
+      KeyMapping kb = minecraft.options.keyUse;
+      KeyMapping.set(kb.getKey(), ControllerReader.rightClick);
     }
   }
   
