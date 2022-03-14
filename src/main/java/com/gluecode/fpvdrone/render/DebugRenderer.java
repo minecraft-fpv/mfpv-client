@@ -15,7 +15,7 @@ public class DebugRenderer {
 //
 //    LapRender.loadCustomShader();
 //
-//    MatrixStack stack = event.getMatrixStack();
+//    PoseStack stack = event.getPoseStack();
 //
 //    Tessellator tessellator = Tessellator.getInstance();
 //    BufferBuilder buffer = tessellator.getBuilder();

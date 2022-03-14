@@ -5,9 +5,9 @@ import com.gluecode.fpvdrone.race.RaceClient;
 import com.gluecode.fpvdrone.race.SerialRaceGate;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -39,7 +39,7 @@ public class BuildModeRenderer {
 
     Entity player = Minecraft.getInstance().getCameraEntity();
 
-    MatrixStack stack = event.getMatrixStack();
+    PoseStack stack = event.getPoseStack();
 
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder buffer = tessellator.getBuilder();
@@ -85,7 +85,7 @@ public class BuildModeRenderer {
 
   public static void renderBoundingBox(
     Matrix4f matrix4f,
-    IVertexBuilder buffer,
+    VertexConsumer buffer,
     Entity renderViewEntity,
     float partialTicks,
     BlockPos origin,
@@ -212,8 +212,8 @@ public class BuildModeRenderer {
   * */
   public static void addWorldPos(
     Vector3f worldPos,
-    MatrixStack stack,
-    IVertexBuilder buffer,
+    PoseStack stack,
+    VertexConsumer buffer,
     Entity renderViewEntity,
     float partialTicks
   ) {

@@ -4,8 +4,8 @@ import com.gluecode.fpvdrone.gui.list.ModelSettingsList;
 import com.gluecode.fpvdrone.gui.screen.addon.DoneFooter;
 import com.gluecode.fpvdrone.gui.screen.addon.ServerTitleWikiHeader;
 import com.gluecode.fpvdrone.gui.screen.addon.WizardDoneFooter;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.GameSettings;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Options;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
@@ -34,7 +34,7 @@ public class ModelSettingsScreen extends FpvScreen {
   // func_230430_a_ = render
   @Override
   public void renderCustom(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int mouseX,
     int mouseY,
     float partialTicks

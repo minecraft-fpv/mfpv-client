@@ -1,8 +1,8 @@
 package com.gluecode.fpvdrone.gui.screen;
 
 import com.gluecode.fpvdrone.gui.screen.addon.ScreenAddon;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.GameSettings;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Options;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -51,7 +51,7 @@ public abstract class FpvScreen extends SettingsScreen {
   }
   
   abstract public void renderCustom(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int mouseX,
     int mouseY,
     float partialTicks
@@ -59,7 +59,7 @@ public abstract class FpvScreen extends SettingsScreen {
   
   @Override
   public void render(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int mouseX,
     int mouseY,
     float partialTicks

@@ -7,7 +7,7 @@ import com.gluecode.fpvdrone.gui.screen.wizard.HelpQAScreen;
 import com.gluecode.fpvdrone.gui.screen.wizard.HelpScreen;
 import com.gluecode.fpvdrone.gui.screen.wizard.WelcomeScreen;
 import com.gluecode.fpvdrone.gui.screen.wizard.WizardConfig;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.ConfirmOpenLinkScreen;
@@ -88,7 +88,7 @@ public class WizardHeader extends ScreenAddon {
   @Override
   public void render(
     FpvScreen screen,
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int mouseX,
     int mouseY,
     float partialTicks

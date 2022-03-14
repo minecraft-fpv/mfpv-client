@@ -8,7 +8,7 @@ import com.gluecode.fpvdrone.input.ControllerConfig;
 import com.gluecode.fpvdrone.input.ControllerReader;
 import com.gluecode.fpvdrone.util.SettingsLoader;
 import com.jme3.math.FastMath;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.Screen;
@@ -189,7 +189,7 @@ public class CalibrateControllerArmScreen extends EmptyListScreen {
   
   @Override
   public void renderCustom(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int mouseX,
     int mouseY,
     float partialTicks
@@ -254,7 +254,7 @@ public class CalibrateControllerArmScreen extends EmptyListScreen {
     return "";
   }
   
-  public void renderListening(MatrixStack matrixStack) {
+  public void renderListening(PoseStack matrixStack) {
     Minecraft minecraft = Minecraft.getInstance();
     
     if (this.step == Step.BEGIN) {

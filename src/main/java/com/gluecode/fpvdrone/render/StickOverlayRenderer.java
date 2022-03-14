@@ -3,7 +3,7 @@ package com.gluecode.fpvdrone.render;
 import com.gluecode.fpvdrone.Main;
 import com.gluecode.fpvdrone.input.ControllerReader;
 import com.gluecode.fpvdrone.input.MouseManager;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class StickOverlayRenderer {
     int scaledWidth = mainWindow.getGuiScaledWidth();
     int scaledHeight = mainWindow.getGuiScaledHeight();
     
-    MatrixStack stack = event.getMatrixStack();
+    PoseStack stack = event.getPoseStack();
     stack.pushPose();
     stack.translate(
       (float) (scaledWidth / 2),
@@ -87,7 +87,7 @@ public class StickOverlayRenderer {
   }
   
   public static void renderAxis(
-    MatrixStack stack,
+    PoseStack stack,
     BufferBuilder buffer,
     float xValue,
     float yValue

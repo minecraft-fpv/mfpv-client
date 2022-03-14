@@ -5,7 +5,7 @@ import com.gluecode.fpvdrone.entity.DroneBuild;
 import com.gluecode.fpvdrone.entity.DroneModel;
 import com.gluecode.fpvdrone.physics.PhysicsState;
 import com.jme3.math.FastMath;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,7 @@ public class BlurryPropRenderer {
   
   public static void render(
     PlayerEntity entity,
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int packedLightIn,
     int packedOverlayIn,
     DroneBuild build
@@ -124,7 +124,7 @@ public class BlurryPropRenderer {
   }
   
   public static void renderOne(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int packedLightIn,
     int packedOverlayIn,
     DroneBuild build
@@ -385,7 +385,7 @@ public class BlurryPropRenderer {
   }
   
   public static void translateRotate(
-    MatrixStack matrixStackIn,
+    PoseStack matrixStackIn,
     float rotationPointX,
     float rotationPointY,
     float rotationPointZ,

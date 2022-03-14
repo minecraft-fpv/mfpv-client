@@ -6,7 +6,7 @@ import com.gluecode.fpvdrone.gui.screen.wizard.WizardConfig;
 import com.gluecode.fpvdrone.gui.widget.RateChart;
 import com.gluecode.fpvdrone.gui.list.RatesList;
 import com.gluecode.fpvdrone.util.SettingsLoader;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -67,7 +67,7 @@ public class RatesScreen extends FpvScreen {
 
   @Override
   public void renderCustom(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int mouseX,
     int mouseY,
     float partialTicks

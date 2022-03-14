@@ -3,7 +3,7 @@ package com.gluecode.fpvdrone.entity;
 import com.gluecode.fpvdrone.Main;
 import com.gluecode.fpvdrone.network.DroneState;
 import com.gluecode.fpvdrone.render.BlurryPropRenderer;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -47,7 +47,7 @@ public class DroneRenderer extends LivingRenderer<AbstractClientPlayerEntity, Dr
   @Override
   protected void setupRotations(
     AbstractClientPlayerEntity player,
-    MatrixStack matrixStackIn,
+    PoseStack matrixStackIn,
     float ageInTicks,
     float rotationYaw,
     float partialTicks
@@ -85,7 +85,7 @@ public class DroneRenderer extends LivingRenderer<AbstractClientPlayerEntity, Dr
     AbstractClientPlayerEntity entityIn,
     float entityYaw,
     float partialTicks,
-    MatrixStack matrixStackIn
+    PoseStack matrixStackIn
   ) {
     // Same logic found in InputHandler.setSpectateCamera
     Minecraft minecraft = Minecraft.getInstance();

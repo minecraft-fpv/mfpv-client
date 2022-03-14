@@ -4,7 +4,7 @@ import com.gluecode.fpvdrone.input.ControllerConfig;
 import com.gluecode.fpvdrone.input.ControllerReader;
 import com.gluecode.fpvdrone.render.StickOverlayRenderer;
 import com.gluecode.fpvdrone.util.Transforms;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -32,7 +32,7 @@ public class RateChart extends Widget {
     this.active = false;
   }
   
-  public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+  public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder buffer = tessellator.getBuilder();
     buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
@@ -123,7 +123,7 @@ public class RateChart extends Widget {
 //    super.render(matrixStack, mouseX, mouseY, partialTicks);
   }
   
-  protected void renderBg(MatrixStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
+  protected void renderBg(PoseStack matrixStack, Minecraft minecraft, int mouseX, int mouseY) {
   }
   
   private void renderCurve(Matrix4f matrix, BufferBuilder buffer, float setpoint, float crate, float csuper, float cexpo, float max, int color) {

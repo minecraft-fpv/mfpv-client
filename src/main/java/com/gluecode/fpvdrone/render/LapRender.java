@@ -6,9 +6,9 @@ import com.gluecode.fpvdrone.race.*;
 import com.gluecode.fpvdrone.render.shader.ShaderObject;
 import com.gluecode.fpvdrone.render.shader.ShaderProgram;
 import com.jme3.math.FastMath;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -119,7 +119,7 @@ public class LapRender {
   //      return;
   //    }
   //
-  //    MatrixStack matrix = event.getMatrixStack();
+  //    PoseStack matrix = event.getPoseStack();
   //    int colorWhite = Main.getColorIntFromHex("#ffffff");
   //    matrix.pushPose();
   //
@@ -194,7 +194,7 @@ public class LapRender {
   ////    BuildModeRenderer.applyLineMode();
   ////    Minecraft.getInstance().getFramebuffer().bindFramebuffer(false);
   //
-  //    MatrixStack stack = event.getMatrixStack();
+  //    PoseStack stack = event.getPoseStack();
   //    stack.pushPose();
   //
   ////    buffer.begin( GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR );
@@ -278,7 +278,7 @@ public class LapRender {
       (float) eyePosMC.z
     );
     
-    MatrixStack stack = event.getMatrixStack();
+    PoseStack stack = event.getPoseStack();
     
     
     stack.pushPose();
@@ -450,8 +450,8 @@ public class LapRender {
   
   
   public static void drawShape(
-    MatrixStack matrixStackIn,
-    IVertexBuilder bufferIn,
+    PoseStack matrixStackIn,
+    VertexConsumer bufferIn,
     VoxelShape shapeIn,
     double xIn,
     double yIn,
@@ -480,7 +480,7 @@ public class LapRender {
   
   private static void renderBlockLines(
     Matrix4f matrix4f,
-    IVertexBuilder buffer,
+    VertexConsumer buffer,
     BlockPos originToFarthest
   ) {
     //    final float red = (proDroneBuild.getColor() >> 16 & 0xff) / 255f;

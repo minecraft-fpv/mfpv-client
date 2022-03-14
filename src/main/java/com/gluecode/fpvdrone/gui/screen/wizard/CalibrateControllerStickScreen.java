@@ -9,7 +9,7 @@ import com.gluecode.fpvdrone.input.ControllerReader;
 import com.gluecode.fpvdrone.render.StickOverlayRenderer;
 import com.gluecode.fpvdrone.util.SettingsLoader;
 import com.jme3.math.FastMath;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.Screen;
@@ -312,7 +312,7 @@ public class CalibrateControllerStickScreen extends EmptyListScreen {
   
   @Override
   public void renderCustom(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int mouseX,
     int mouseY,
     float partialTicks
@@ -344,7 +344,7 @@ public class CalibrateControllerStickScreen extends EmptyListScreen {
     }
   }
   
-  public void renderSticks(MatrixStack stack) {
+  public void renderSticks(PoseStack stack) {
     stack.pushPose();
     stack.translate(this.width / 2f, WizardConfig.headerHeight + WizardConfig.contentTop + WizardConfig.titleSpacing + 15, 0);
     stack.scale(2.5f, -2.5f, 1);
@@ -386,7 +386,7 @@ public class CalibrateControllerStickScreen extends EmptyListScreen {
     StickOverlayRenderer.cleanLineMode();
   }
   
-  public void renderRangeLabels(MatrixStack stack, float gridX) {
+  public void renderRangeLabels(PoseStack stack, float gridX) {
     Minecraft minecraft = Minecraft.getInstance();
     DecimalFormat df = new DecimalFormat();
     df.setMaximumFractionDigits(2);

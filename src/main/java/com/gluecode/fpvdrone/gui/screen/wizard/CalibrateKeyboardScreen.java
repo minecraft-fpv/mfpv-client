@@ -7,7 +7,7 @@ import com.gluecode.fpvdrone.gui.screen.addon.BackProceedFooter;
 import com.gluecode.fpvdrone.gui.screen.addon.WizardHeader;
 import com.gluecode.fpvdrone.input.ControllerReader;
 import com.gluecode.fpvdrone.input.KeyManager;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -95,7 +95,7 @@ public class CalibrateKeyboardScreen extends EmptyListScreen {
   
   @Override
   public void renderCustom(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int mouseX,
     int mouseY,
     float partialTicks

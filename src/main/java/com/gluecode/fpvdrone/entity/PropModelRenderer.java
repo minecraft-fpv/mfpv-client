@@ -2,15 +2,15 @@ package com.gluecode.fpvdrone.entity;
 
 import com.gluecode.fpvdrone.Main;
 import com.jme3.math.FastMath;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.model.Model;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -40,8 +40,8 @@ public class PropModelRenderer extends ModelRenderer {
   
   @Override
   public void compile(
-    MatrixStack.Entry matrixEntryIn,
-    IVertexBuilder bufferIn,
+    PoseStack.Entry matrixEntryIn,
+    VertexConsumer bufferIn,
     int packedLightIn,
     int packedOverlayIn,
     float red,

@@ -2,14 +2,14 @@ package com.gluecode.fpvdrone.input;
 
 import com.gluecode.fpvdrone.Main;
 import com.gluecode.fpvdrone.gui.GuiEvents;
-import net.minecraft.client.GameSettings;
+import net.minecraft.client.Options;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
@@ -32,7 +32,7 @@ public class KeyManager {
     ClientRegistry.registerKeyBinding(armKey);
     ClientRegistry.registerKeyBinding(menuKey);
   
-    GameSettings gameSettings = Minecraft.getInstance().options;
+    Options gameSettings = Minecraft.getInstance().options;
   
     KeyMapping[] nextKeyMappings = new KeyMapping[gameSettings.keyMappings.length];
     for (int i = 0; i < gameSettings.keyMappings.length; i++) {
@@ -59,7 +59,7 @@ public class KeyManager {
   }
   
   public static void poll() {
-    GameSettings gameSettings = Minecraft.getInstance().options;
+    Options gameSettings = Minecraft.getInstance().options;
     if (ControllerReader.arm &&
         ((KeyMappingInterceptor) gameSettings.keyLeft).isKeyReallyDown()) {
       ControllerReader.yaw += -0.5f;
@@ -89,10 +89,10 @@ public class KeyManager {
     int action = event.getAction();
     int code = event.getKey();
     
-    if (code == armKey.key.getValue()) {
+    if (code == armKey.getKey().getValue()) {
       ControllerReader.rawArm = action == GLFW.GLFW_PRESS;
       ControllerReader.handleArmToggle();
-    } else if (code == menuKey.key.getValue()) {
+    } else if (code == menuKey.getKey().getValue()) {
       Minecraft minecraft = Minecraft.getInstance();
       if (minecraft.screen == null) {
         minecraft.pauseGame(false);

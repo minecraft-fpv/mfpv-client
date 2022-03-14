@@ -9,10 +9,10 @@ import com.gluecode.fpvdrone.util.SettingsLoader;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
@@ -387,7 +387,7 @@ public class BarrelRenderer {
     
     if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
     
-    //    Minecraft.getInstance().levelRenderer.updateCameraAndRender(event.getMatrixStack(), event.getPartialTicks(), event.getFinishTimeNano(), true, Minecraft.getInstance().gameRenderer.getMainCamera(), Minecraft.getInstance().gameRenderer, Minecraft.getInstance().gameRenderer.lightTexture(), event.getProjectionMatrix());
+    //    Minecraft.getInstance().levelRenderer.updateCameraAndRender(event.getPoseStack(), event.getPartialTicks(), event.getFinishTimeNano(), true, Minecraft.getInstance().gameRenderer.getMainCamera(), Minecraft.getInstance().gameRenderer, Minecraft.getInstance().gameRenderer.lightTexture(), event.getProjectionMatrix());
     
     saveRenderPass();
     runShader();
@@ -401,7 +401,7 @@ public class BarrelRenderer {
   
   private static void renderBoundingBox(
     Matrix4f matrix4f,
-    IVertexBuilder buffer,
+    VertexConsumer buffer,
     Entity renderViewEntity,
     float partialTicks,
     BlockPos origin,
@@ -528,8 +528,8 @@ public class BarrelRenderer {
   * */
   public static void addWorldPos(
     Vector3f worldPos,
-    MatrixStack stack,
-    IVertexBuilder buffer,
+    PoseStack stack,
+    VertexConsumer buffer,
     Entity renderViewEntity,
     float partialTicks
   ) {

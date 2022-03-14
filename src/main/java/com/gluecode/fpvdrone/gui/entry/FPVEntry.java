@@ -2,7 +2,7 @@ package com.gluecode.fpvdrone.gui.entry;
 
 import com.gluecode.fpvdrone.Main;
 import com.gluecode.fpvdrone.gui.list.FPVList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -88,7 +88,7 @@ public abstract class FPVEntry extends AbstractOptionList.Entry<FPVEntry> {
   }
   
   abstract public void betterRender(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     FontRenderer fontRenderer,
     int rowIndex,
     int rowTop,
@@ -102,7 +102,7 @@ public abstract class FPVEntry extends AbstractOptionList.Entry<FPVEntry> {
   );
   
   public void render(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int rowIndex,
     int rowTop,
     int rowLeft,

@@ -3,7 +3,7 @@ package com.gluecode.fpvdrone.gui.screen.wizard;
 import com.gluecode.fpvdrone.gui.screen.EmptyListScreen;
 import com.gluecode.fpvdrone.gui.screen.addon.BackFooter;
 import com.gluecode.fpvdrone.gui.screen.addon.WizardHeader;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ConfirmOpenLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -65,7 +65,7 @@ public class HelpScreen extends EmptyListScreen {
   
   @Override
   public void renderCustom(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int mouseX,
     int mouseY,
     float partialTicks

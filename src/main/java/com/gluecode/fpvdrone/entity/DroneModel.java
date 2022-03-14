@@ -3,19 +3,20 @@ package com.gluecode.fpvdrone.entity;
 import com.gluecode.fpvdrone.Main;
 import com.gluecode.fpvdrone.network.DroneState;
 import com.jme3.math.FastMath;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.math.vector.Quaternion;
 
 import java.util.UUID;
 
-public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerModel<T> {
+public class DroneModel<T extends AbstractClientPlayer> extends PlayerModel<T> {
   private static final float rads = (float) (Math.PI / 180.0);
   private static final float degs = (float) (180.0 / Math.PI);
   public static float scale = 32;
@@ -25,17 +26,17 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
 //  private boolean showBlur = false;
   private UUID playerUuid;
   
-  private final ModelRenderer frame;
-  private final ModelRenderer[] motors;
-  private final ModelRenderer splitCam;
-  private final ModelRenderer splitCamWindow;
-  private ModelRenderer proCam;
-  private ModelRenderer proCamWindow;
-  private final ModelRenderer txaStem;
-  private final ModelRenderer txaTip;
-  private final ModelRenderer standoffs;
-  private final ModelRenderer battery;
-  private PropModelRenderer[] blades;
+  private final ModelPart frame;
+  private final ModelPart[] motors;
+  private final ModelPart splitCam;
+  private final ModelPart splitCamWindow;
+  private ModelPart proCam;
+  private ModelPart proCamWindow;
+  private final ModelPart txaStem;
+  private final ModelPart txaTip;
+  private final ModelPart standoffs;
+  private final ModelPart battery;
+  private PropModelPart[] blades;
   
   private float lastAge = 0;
 //  private float motorPosition = 0;
@@ -47,7 +48,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
     
     this.renderType = (resourceLocation) -> {
       if (propsLayer) {
-        // For some reason, even when PropModelRenderer is imitating the RenderType.entityCutoutNoCull,
+        // For some reason, even when PropModelPart is imitating the RenderType.entityCutoutNoCull,
         // Props will render as black.
         // They need to be renderered using EntityTranslucent
         return RenderType.entityTranslucentCull(resourceLocation);
@@ -60,7 +61,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
     
 //    super((resourceLocation) -> {
 //      if (propsLayer) {
-//        // For some reason, even when PropModelRenderer is imitating the RenderType.entityCutoutNoCull,
+//        // For some reason, even when PropModelPart is imitating the RenderType.entityCutoutNoCull,
 //        // Props will render as black.
 //        // They need to be renderered using EntityTranslucent
 //        return RenderType.entityTranslucentCull(resourceLocation);
@@ -135,7 +136,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
     float txaTipWidth = 0.013f;
     float txaTipHeight = 0.013f;
     
-    frame = new ModelRenderer(this);
+    frame = new ModelPart(this);
     frame.setPos(0, 24, 0);
     // top plate
     frame.texOffs(0, 0).addBox(
@@ -160,7 +161,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
       false
     );
     
-    standoffs = new ModelRenderer(this);
+    standoffs = new ModelPart(this);
     standoffs.setPos(0, 24, 0);
     
     // front stand-offs
@@ -266,7 +267,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
     );
     
     // battery
-    battery = new ModelRenderer(this);
+    battery = new ModelPart(this);
     battery.setPos(0, 24, 0);
     if (bottomBattery) {
       battery.texOffs(0, 0).addBox(
@@ -293,7 +294,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
     }
     
     // tx antenna
-    txaStem = new ModelRenderer(this);
+    txaStem = new ModelPart(this);
     txaStem.setPos(
       0,
       -(frameHeight - plateThickness) * scale,
@@ -311,7 +312,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
       0.0F,
       false
     );
-    txaTip = new ModelRenderer(this);
+    txaTip = new ModelPart(this);
     txaTip.setPos(
       0,
       24 - (frameHeight - plateThickness) * scale,
@@ -329,7 +330,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
     );
     
     // split cam
-    splitCam = new ModelRenderer(this);
+    splitCam = new ModelPart(this);
     splitCam.setPos(
       0.0F,
       24 - (frameHeight / 2f) * scale,
@@ -345,7 +346,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
       0.0F,
       false
     );
-    splitCamWindow = new ModelRenderer(this);
+    splitCamWindow = new ModelPart(this);
     splitCamWindow.setPos(
       0,
       24 - (frameHeight / 2f) * scale,
@@ -368,7 +369,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
         float cameraAngle = build.cameraAngle * rads;
         float proCamPivotNudge = FastMath.sin(cameraAngle) *
                                  proCamWidth;
-        proCam = new ModelRenderer(this);
+        proCam = new ModelPart(this);
         proCam.setPos(
           0.0F,
           24 - (frameHeight) * scale,
@@ -385,7 +386,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
           0.0F,
           false
         );
-        proCamWindow = new ModelRenderer(this);
+        proCamWindow = new ModelPart(this);
         proCamWindow.setPos(
           0,
           24 - (frameHeight) * scale,
@@ -406,7 +407,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
         float cameraAngle = build.cameraAngle * rads;
         float proCamPivotNudge = FastMath.sin(cameraAngle) *
                                  heroCamHeight;
-        proCam = new ModelRenderer(this);
+        proCam = new ModelPart(this);
         proCam.setPos(
           0.0F,
           24 - (frameHeight) * scale,
@@ -423,7 +424,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
           0.0F,
           false
         );
-        proCamWindow = new ModelRenderer(this);
+        proCamWindow = new ModelPart(this);
         proCamWindow.setPos(
           0,
           24 - (frameHeight) * scale,
@@ -444,15 +445,15 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
     }
     
 //    if (this.showProps && this.showBlur) {
-//      blades = new PropModelRenderer[1 * 4];
+//      blades = new PropModelPart[1 * 4];
 //    } else if (this.showProps && !this.showBlur) {
-      blades = new PropModelRenderer[nBlades * 4];
+      blades = new PropModelPart[nBlades * 4];
 //    }
     
     
-    motors = new ModelRenderer[4];
+    motors = new ModelPart[4];
     for (int i = 0; i < 4; i++) {
-      ModelRenderer motor = attachArm(
+      ModelPart motor = attachArm(
         i,
         armLength,
         armWidth,
@@ -468,8 +469,8 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
     }
   }
   
-  // Returns the motor's ModelRenderer
-  public ModelRenderer attachArm(
+  // Returns the motor's ModelPart
+  public ModelPart attachArm(
     int motorNumber,
     float armLength,
     float armWidth,
@@ -483,7 +484,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
   ) {
     float armAngle = -motorNumber * 1f / 4f * FastMath.PI * 2f;
     
-    ModelRenderer arm = new ModelRenderer(this);
+    ModelPart arm = new ModelPart(this);
     arm.setPos(0, 0, 0);
     frame.addChild(arm);
     setRotationAngle(
@@ -507,7 +508,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
     float motorG = 0.75f;
     float motorB = 0.75f;
     
-    ColorModelRenderer motor = new ColorModelRenderer(
+    ColorModelPart motor = new ColorModelPart(
       this,
       motorR,
       motorG,
@@ -544,7 +545,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
     float accentG = build.green;
     float accentB = build.blue;
     
-    ColorModelRenderer propHub = new ColorModelRenderer(
+    ColorModelPart propHub = new ColorModelPart(
       this,
       accentR,
       accentG,
@@ -569,7 +570,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
 //      // Only render once because all blades have been baked into the texture.
 //      for (int i = 0; i < 1; i++) {
 //        float bladeAngle = i * 1f / nBlades * FastMath.PI * 2f;
-//        PropModelRenderer blade = new PropModelRenderer(
+//        PropModelPart blade = new PropModelPart(
 //          this,
 //          false,
 //          build,
@@ -594,7 +595,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
     if (this.propsLayer) {
       for (int i = 0; i < nBlades; i++) {
         float bladeAngle = i * 1f / nBlades * FastMath.PI * 2f;
-        PropModelRenderer blade = new PropModelRenderer(
+        PropModelPart blade = new PropModelPart(
           this,
           build,
           motorNumber
@@ -660,8 +661,8 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
   
   @Override
   public void renderToBuffer(
-    MatrixStack matrixStack,
-    IVertexBuilder buffer,
+    PoseStack matrixStack,
+    VertexConsumer buffer,
     int packedLight,
     int packedOverlay,
     float red,
@@ -810,7 +811,7 @@ public class DroneModel<T extends AbstractClientPlayerEntity> extends PlayerMode
   }
   
   public void setRotationAngle(
-    ModelRenderer modelRenderer,
+    ModelPart modelRenderer,
     float x,
     float y,
     float z

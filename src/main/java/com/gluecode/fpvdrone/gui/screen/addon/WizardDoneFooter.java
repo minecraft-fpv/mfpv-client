@@ -3,7 +3,7 @@ package com.gluecode.fpvdrone.gui.screen.addon;
 import com.gluecode.fpvdrone.gui.GuiEvents;
 import com.gluecode.fpvdrone.gui.screen.FpvScreen;
 import com.gluecode.fpvdrone.gui.screen.wizard.WizardConfig;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
@@ -52,7 +52,7 @@ public class WizardDoneFooter extends ScreenAddon {
   
   @Override
   public void render(
-    FpvScreen screen, MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks
+    FpvScreen screen, PoseStack matrixStack, int mouseX, int mouseY, float partialTicks
   ) {
   
   }

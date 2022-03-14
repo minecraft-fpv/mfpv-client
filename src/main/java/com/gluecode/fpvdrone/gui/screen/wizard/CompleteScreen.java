@@ -4,7 +4,7 @@ import com.gluecode.fpvdrone.gui.GuiEvents;
 import com.gluecode.fpvdrone.gui.screen.EmptyListScreen;
 import com.gluecode.fpvdrone.gui.screen.addon.DoneFooter;
 import com.gluecode.fpvdrone.util.SettingsLoader;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -66,7 +66,7 @@ public class CompleteScreen extends EmptyListScreen {
   
   @Override
   public void renderCustom(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int mouseX,
     int mouseY,
     float partialTicks

@@ -7,7 +7,7 @@ import com.gluecode.fpvdrone.gui.screen.FpvScreen;
 import com.gluecode.fpvdrone.gui.screen.addon.BackFooter;
 import com.gluecode.fpvdrone.gui.screen.addon.WizardHeader;
 import com.gluecode.fpvdrone.input.ControllerReader;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.Color;
@@ -63,7 +63,7 @@ public class ChooseControllerScreen extends FpvScreen {
   
   @Override
   public void renderCustom(
-    MatrixStack matrixStack,
+    PoseStack matrixStack,
     int mouseX,
     int mouseY,
     float partialTicks

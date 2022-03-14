@@ -222,7 +222,7 @@ public class Main {
         player,
         player.getViewYRot(partialTicks),
         partialTicks,
-        event.getMatrixStack(),
+        event.getPoseStack(),
         event.getBuffers(),
         event.getLight()
       );
@@ -260,7 +260,7 @@ public class Main {
         player,
         player.getViewYRot(partialTicks),
         partialTicks,
-        event.getMatrixStack()
+        event.getPoseStack()
       );
     }
   }

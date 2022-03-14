@@ -116,8 +116,8 @@ public class KeyMappingInterceptor extends KeyMapping {
   
   protected void copyKeyCodeToOriginal() {
     // only copy if necessary
-    if (this.key != interceptedKeyMapping.key) {
-      this.key = interceptedKeyMapping.key;
+    if (this.getKey() != interceptedKeyMapping.getKey()) {
+      this.setKey(interceptedKeyMapping.getKey());
       resetMapping();
     }
   }
