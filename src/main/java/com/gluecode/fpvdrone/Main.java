@@ -10,9 +10,9 @@ import com.gluecode.fpvdrone.physics.PhysicsCoreLoader;
 import com.gluecode.fpvdrone.util.SettingsLoader;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.client.world.ClientWorld;
@@ -197,7 +197,7 @@ public class Main {
   public static void onRender(RenderPlayerEvent.Pre event) {
     // Render the drone model, excluding the proDroneBuild.
     
-    AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) event.getPlayer();
+    AbstractClientPlayer player = (AbstractClientPlayer) event.getPlayer();
     if (Main.entityArmStates.getOrDefault(player.getUUID(), false)) {
       event.setCanceled(true);
       
@@ -233,7 +233,7 @@ public class Main {
   @SubscribeEvent
   public static void onRenderDrone(RenderWorldLastEvent event) {
     // Render the drone props only for all players.
-    ClientPlayerEntity self = Minecraft.getInstance().player;
+    LocalPlayer self = Minecraft.getInstance().player;
     if (self == null) return;
     UUID selfId = self.getUUID();
     for (UUID uuid : droneRenderers.keySet()) {
@@ -247,7 +247,7 @@ public class Main {
       
       ClientWorld world = Minecraft.getInstance().level;
       if (world == null) continue;
-      AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) world
+      AbstractClientPlayer player = (AbstractClientPlayer) world
         .getPlayerByUUID(uuid);
       if (player == null) continue;
       DroneRenderer droneRenderer = droneRenderers.get(uuid);
@@ -281,7 +281,7 @@ public class Main {
     
     if (name == null) {
       Minecraft minecraft = Minecraft.getInstance();
-      ClientPlayNetHandler clientPlayNetHandler = minecraft.getConnection();
+      ClientPacketListener clientPlayNetHandler = minecraft.getConnection();
       if (clientPlayNetHandler != null) {
         NetworkPlayerInfo playerInfo = clientPlayNetHandler.getPlayerInfo(
           userId);

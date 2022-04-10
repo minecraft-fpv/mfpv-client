@@ -3,7 +3,7 @@ package com.gluecode.fpvdrone.entity;
 import com.gluecode.fpvdrone.Main;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
@@ -14,12 +14,12 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.UUID;
 
-public class DronePropsLayer<DroneEntity extends LivingEntity> extends LayerRenderer<AbstractClientPlayerEntity, DroneModel<AbstractClientPlayerEntity>> {
-  private final DroneModel<AbstractClientPlayerEntity> droneModel;
+public class DronePropsLayer<DroneEntity extends LivingEntity> extends LayerRenderer<AbstractClientPlayer, DroneModel<AbstractClientPlayer>> {
+  private final DroneModel<AbstractClientPlayer> droneModel;
   
   public DronePropsLayer(
     UUID uuid,
-    IEntityRenderer<AbstractClientPlayerEntity, DroneModel<AbstractClientPlayerEntity>> entityRendererIn,
+    IEntityRenderer<AbstractClientPlayer, DroneModel<AbstractClientPlayer>> entityRendererIn,
     DroneBuild build
   ) {
     super(entityRendererIn);
@@ -36,7 +36,7 @@ public class DronePropsLayer<DroneEntity extends LivingEntity> extends LayerRend
     PoseStack matrixStackIn,
     IRenderTypeBuffer bufferIn,
     int packedLightIn,
-    AbstractClientPlayerEntity entitylivingbaseIn,
+    AbstractClientPlayer entitylivingbaseIn,
     float limbSwing,
     float limbSwingAmount,
     float partialTicks,

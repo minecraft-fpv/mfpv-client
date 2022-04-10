@@ -5,7 +5,7 @@ import com.gluecode.fpvdrone.network.DroneState;
 import com.gluecode.fpvdrone.render.BlurryPropRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.entity.Entity;
@@ -18,7 +18,7 @@ import net.minecraft.util.math.vector.Vector3f;
 
 import java.util.UUID;
 
-public class DroneRenderer extends LivingRenderer<AbstractClientPlayerEntity, DroneModel<AbstractClientPlayerEntity>> {
+public class DroneRenderer extends LivingRenderer<AbstractClientPlayer, DroneModel<AbstractClientPlayer>> {
   protected static final ResourceLocation TEXTURE = new ResourceLocation(
     Main.MOD_ID,
     "textures/entity/drone.png"
@@ -40,13 +40,13 @@ public class DroneRenderer extends LivingRenderer<AbstractClientPlayerEntity, Dr
   }
   
   @Override
-  public ResourceLocation getTextureLocation(AbstractClientPlayerEntity entity) {
+  public ResourceLocation getTextureLocation(AbstractClientPlayer entity) {
     return TEXTURE;
   }
   
   @Override
   protected void setupRotations(
-    AbstractClientPlayerEntity player,
+    AbstractClientPlayer player,
     PoseStack matrixStackIn,
     float ageInTicks,
     float rotationYaw,
@@ -82,7 +82,7 @@ public class DroneRenderer extends LivingRenderer<AbstractClientPlayerEntity, Dr
   }
   
   public void renderBlurryProps(
-    AbstractClientPlayerEntity entityIn,
+    AbstractClientPlayer entityIn,
     float entityYaw,
     float partialTicks,
     PoseStack matrixStackIn

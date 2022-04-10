@@ -11,7 +11,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -40,7 +40,7 @@ public class LapRender {
   @SubscribeEvent
   public static void handleOverlayRender(RenderGameOverlayEvent.Text event) {
     Minecraft minecraft = Minecraft.getInstance();
-    ClientPlayerEntity player = minecraft.player;
+    LocalPlayer player = minecraft.player;
     UUID currentUserId = player.getUUID();
     if (!RaceClient.checkRacingMode(currentUserId)) {
       return;
@@ -114,7 +114,7 @@ public class LapRender {
   //  @SubscribeEvent
   //  public static void handleOverlayRender(RenderGameOverlayEvent.Pre event) {
   //    Minecraft minecraft = Minecraft.getInstance();
-  //    ClientPlayerEntity player = minecraft.player;
+  //    LocalPlayer player = minecraft.player;
   //    if (!InputHandler.arm) {
   //      return;
   //    }

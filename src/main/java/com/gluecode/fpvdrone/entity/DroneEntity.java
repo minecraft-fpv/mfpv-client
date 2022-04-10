@@ -2,7 +2,7 @@ package com.gluecode.fpvdrone.entity;
 
 import com.gluecode.fpvdrone.Main;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class DroneEntity extends AbstractClientPlayerEntity {
+public class DroneEntity extends AbstractClientPlayer {
   public DroneEntity(ClientWorld world, GameProfile profile) {
     super(world, profile);
   }
