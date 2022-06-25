@@ -3,11 +3,11 @@ package com.gluecode.fpvdrone.network.packet;
 import com.gluecode.fpvdrone.Main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -23,14 +23,14 @@ public class SetArmPacket {
     this.uuidLeastSig = uuid.getLeastSignificantBits();
   }
   
-  public static SetArmPacket decode(PacketBuffer buffer) {
+  public static SetArmPacket decode(FriendlyByteBuf buffer) {
     return new SetArmPacket(
       buffer.readBoolean(),
       new UUID(buffer.readLong(), buffer.readLong())
     );
   }
   
-  public static void encode(SetArmPacket msg, PacketBuffer buffer) {
+  public static void encode(SetArmPacket msg, FriendlyByteBuf buffer) {
     buffer.writeBoolean(msg.armed);
     buffer.writeLong(msg.uuidMostSig);
     buffer.writeLong(msg.uuidLeastSig);

@@ -1,11 +1,11 @@
 package com.gluecode.fpvdrone.network.packet;
 
 import com.gluecode.fpvdrone.race.RaceClient;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -21,7 +21,7 @@ public class SetRaceModePacket {
     this.userId = userUUID;
   }
 
-  public static SetRaceModePacket decode(PacketBuffer buffer) {
+  public static SetRaceModePacket decode(FriendlyByteBuf buffer) {
     return new SetRaceModePacket(
       buffer.readBoolean(),
       new UUID(buffer.readLong(), buffer.readLong()),
@@ -29,7 +29,7 @@ public class SetRaceModePacket {
     );
   }
 
-  public static void encode(SetRaceModePacket msg, PacketBuffer buffer) {
+  public static void encode(SetRaceModePacket msg, FriendlyByteBuf buffer) {
     buffer.writeBoolean(msg.value);
     buffer.writeLong(msg.trackId.getMostSignificantBits());
     buffer.writeLong(msg.trackId.getLeastSignificantBits());

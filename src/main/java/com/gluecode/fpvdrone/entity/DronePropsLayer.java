@@ -7,10 +7,10 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.UUID;
 
@@ -82,7 +82,7 @@ public class DronePropsLayer<DroneEntity extends LivingEntity> extends LayerRend
         matrixStackIn,
         ivertexbuilder,
         packedLightIn,
-        LivingRenderer.getOverlayCoords(entitylivingbaseIn, 0.0F),
+        LivingEntityRenderer.getOverlayCoords(entitylivingbaseIn, 0.0F),
         1.0F,
         1.0F,
         1.0F,

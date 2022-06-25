@@ -1,11 +1,11 @@
 package com.gluecode.fpvdrone.network.packet;
 
 import com.gluecode.fpvdrone.race.RaceClient;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -21,7 +21,7 @@ public class GateIndexPacket {
     this.userId = userId;
   }
 
-  public static GateIndexPacket decode(PacketBuffer buffer) {
+  public static GateIndexPacket decode(FriendlyByteBuf buffer) {
     return new GateIndexPacket(
       buffer.readInt(),
       new UUID(buffer.readLong(), buffer.readLong()),
@@ -29,7 +29,7 @@ public class GateIndexPacket {
     );
   }
 
-  public static void encode(GateIndexPacket msg, PacketBuffer buffer) {
+  public static void encode(GateIndexPacket msg, FriendlyByteBuf buffer) {
     buffer.writeInt(msg.gateIndex);
     buffer.writeLong(msg.trackId.getMostSignificantBits());
     buffer.writeLong(msg.trackId.getLeastSignificantBits());

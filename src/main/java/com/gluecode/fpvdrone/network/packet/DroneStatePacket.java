@@ -4,11 +4,11 @@ import com.gluecode.fpvdrone.Main;
 import com.gluecode.fpvdrone.network.DroneState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -70,7 +70,7 @@ public class DroneStatePacket {
     this.timeSent = timeSent;
   }
   
-  public static DroneStatePacket decode(PacketBuffer buffer) {
+  public static DroneStatePacket decode(FriendlyByteBuf buffer) {
     return new DroneStatePacket(
       new UUID(
         buffer.readLong(),
@@ -88,7 +88,7 @@ public class DroneStatePacket {
     );
   }
   
-  public static void encode(DroneStatePacket msg, PacketBuffer buffer) {
+  public static void encode(DroneStatePacket msg, FriendlyByteBuf buffer) {
     buffer.writeLong(msg.uuidMostSig);
     buffer.writeLong(msg.uuidLeastSig);
     buffer.writeFloat(msg.x);

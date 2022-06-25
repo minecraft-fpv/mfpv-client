@@ -1,7 +1,7 @@
 package com.gluecode.fpvdrone;
 
-import com.gluecode.fpvdrone.entity.DroneBuild;
-import com.gluecode.fpvdrone.entity.DroneRenderer;
+//import com.gluecode.fpvdrone.entity.DroneBuild;
+//import com.gluecode.fpvdrone.entity.DroneRenderer;
 import com.gluecode.fpvdrone.input.ControllerReader;
 import com.gluecode.fpvdrone.input.KeyManager;
 import com.gluecode.fpvdrone.network.packet.PacketHandler;
@@ -13,16 +13,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.RegistryKey;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent;
@@ -63,9 +64,9 @@ public class Main {
   public static Map<UUID, Vec3> entityPosition = Maps.newConcurrentMap();
   public static Map<UUID, Vec3> entityVelocity = Maps.newConcurrentMap();
   public static Map<UUID, Boolean> entityArmStates = Maps.newConcurrentMap();
-  public static Map<UUID, DroneBuild> droneBuilds = Maps.newConcurrentMap();
+//  public static Map<UUID, DroneBuild> droneBuilds = Maps.newConcurrentMap();
   public static Map<UUID, String> cachedPlayerNames = Maps.newConcurrentMap();
-  public static Map<UUID, DroneRenderer> droneRenderers = Maps.newConcurrentMap();
+//  public static Map<UUID, DroneRenderer> droneRenderers = Maps.newConcurrentMap();
   
   public Main() {
     DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
@@ -192,78 +193,86 @@ public class Main {
     }
   }
   
-  @OnlyIn(Dist.CLIENT)
-  @SubscribeEvent
-  public static void onRender(RenderPlayerEvent.Pre event) {
+//  @OnlyIn(Dist.CLIENT)
+//  @SubscribeEvent
+//  public static void onRender(RenderPlayerEvent.Pre event) {
     // Render the drone model, excluding the proDroneBuild.
     
-    AbstractClientPlayer player = (AbstractClientPlayer) event.getPlayer();
-    if (Main.entityArmStates.getOrDefault(player.getUUID(), false)) {
-      event.setCanceled(true);
-      
-      DroneRenderer droneRenderer = droneRenderers.get(player.getUUID());
-      if (droneRenderer == null) {
-        UUID uuid = player.getUUID();
-        DroneBuild build = Main.droneBuilds.getOrDefault(
-          uuid,
-          DroneBuild.getSelf()
-        );
-        droneRenderer = new DroneRenderer(
-          uuid,
-          event.getRenderer().getDispatcher(),
-          build
-        );
-        droneRenderers.put(player.getUUID(), droneRenderer);
-      }
-      
-      float partialTicks = event.getPartialRenderTick();
-//      droneRenderer.renderProps = false;
-      droneRenderer.render(
-        player,
-        player.getViewYRot(partialTicks),
-        partialTicks,
-        event.getPoseStack(),
-        event.getBuffers(),
-        event.getLight()
-      );
-    }
-  }
+//    AbstractClientPlayer player = (AbstractClientPlayer) event.getPlayer();
+//    if (Main.entityArmStates.getOrDefault(player.getUUID(), false)) {
+//      event.setCanceled(true);
+//
+//      DroneRenderer droneRenderer = droneRenderers.get(player.getUUID());
+//      if (droneRenderer == null) {
+//        UUID uuid = player.getUUID();
+//        DroneBuild build = Main.droneBuilds.getOrDefault(
+//          uuid,
+//          DroneBuild.getSelf()
+//        );
+//
+//        // todo:
+//        // A custom renderer cannot be instantiated anymore in 1.18 because the event
+//        // does not contain an EntityRendererProvider.Context.
+//
+//        PlayerRenderer playerRenderer = event.getRenderer();
+//        playerRenderer.layers
+//
+//        droneRenderer = new DroneRenderer(
+//          uuid,
+//          event.getRenderer(),
+//          build
+//        );
+//        droneRenderers.put(player.getUUID(), droneRenderer);
+//      }
+//
+//      float partialTicks = event.getPartialRenderTick();
+////      droneRenderer.renderProps = false;
+//      droneRenderer.render(
+//        player,
+//        player.getViewYRot(partialTicks),
+//        partialTicks,
+//        event.getPoseStack(),
+//        event.getBuffers(),
+//        event.getLight()
+//      );
+//    }
+//  }
   
-  @OnlyIn(Dist.CLIENT)
-  @SubscribeEvent
-  public static void onRenderDrone(RenderWorldLastEvent event) {
-    // Render the drone props only for all players.
-    LocalPlayer self = Minecraft.getInstance().player;
-    if (self == null) return;
-    UUID selfId = self.getUUID();
-    for (UUID uuid : droneRenderers.keySet()) {
-      if (uuid.equals(selfId)) {
-        if (Minecraft.getInstance().options.getCameraType() ==
-            PointOfView.FIRST_PERSON) {
-          // Do not render self props because they will get in the way.
-          continue;
-        }
-      }
-      
-      ClientWorld world = Minecraft.getInstance().level;
-      if (world == null) continue;
-      AbstractClientPlayer player = (AbstractClientPlayer) world
-        .getPlayerByUUID(uuid);
-      if (player == null) continue;
-      DroneRenderer droneRenderer = droneRenderers.get(uuid);
-      if (droneRenderer == null) continue;
-      
-      float partialTicks = event.getPartialTicks();
-      
-//      droneRenderer.renderProps = true;
-      droneRenderer.renderBlurryProps(
-        player,
-        player.getViewYRot(partialTicks),
-        partialTicks,
-        event.getPoseStack()
-      );
-    }
-  }
+//  @OnlyIn(Dist.CLIENT)
+//  @SubscribeEvent
+//  public static void onRenderDrone(RenderWorldLastEvent event) {
+//    // Render the drone props only for all players.
+//    LocalPlayer self = Minecraft.getInstance().player;
+//    if (self == null) return;
+//    UUID selfId = self.getUUID();
+//    for (UUID uuid : droneRenderers.keySet()) {
+//      if (uuid.equals(selfId)) {
+//        if (Minecraft.getInstance().options.getCameraType() ==
+//            PointOfView.FIRST_PERSON) {
+//          // Do not render self props because they will get in the way.
+//          continue;
+//        }
+//      }
+//
+//      ClientWorld world = Minecraft.getInstance().level;
+//      if (world == null) continue;
+//      AbstractClientPlayer player = (AbstractClientPlayer) world
+//        .getPlayerByUUID(uuid);
+//      if (player == null) continue;
+//      DroneRenderer droneRenderer = droneRenderers.get(uuid);
+//      if (droneRenderer == null) continue;
+//
+//      float partialTicks = event.getPartialTicks();
+//
+////      droneRenderer.renderProps = true;
+//      droneRenderer.renderBlurryProps(
+//        player,
+//        player.getViewYRot(partialTicks),
+//        partialTicks,
+//        event.getPoseStack()
+//      );
+//    }
+//  }
   
   @OnlyIn(Dist.CLIENT)
   @SubscribeEvent
@@ -283,7 +292,7 @@ public class Main {
       Minecraft minecraft = Minecraft.getInstance();
       ClientPacketListener clientPlayNetHandler = minecraft.getConnection();
       if (clientPlayNetHandler != null) {
-        NetworkPlayerInfo playerInfo = clientPlayNetHandler.getPlayerInfo(
+        PlayerInfo playerInfo = clientPlayNetHandler.getPlayerInfo(
           userId);
         if (playerInfo != null) {
           name = playerInfo.getProfile().getName();
@@ -334,9 +343,9 @@ public class Main {
   }
   
   public static @Nullable
-  String getDimension(@Nullable World world) {
+  String getDimension(@Nullable Level world) {
     if (world == null) return null;
-    RegistryKey<World> dimension = world.dimension();
+    ResourceKey<Level> dimension = world.dimension();
     return dimension.location().toString();
   }
 }

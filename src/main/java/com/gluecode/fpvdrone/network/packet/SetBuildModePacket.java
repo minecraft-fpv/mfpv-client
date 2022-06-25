@@ -1,11 +1,11 @@
 package com.gluecode.fpvdrone.network.packet;
 
 import com.gluecode.fpvdrone.race.RaceClient;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -16,11 +16,11 @@ public class SetBuildModePacket {
     this.value = value;
   }
 
-  public static SetBuildModePacket decode(PacketBuffer buffer) {
+  public static SetBuildModePacket decode(FriendlyByteBuf buffer) {
     return new SetBuildModePacket(buffer.readBoolean());
   }
 
-  public static void encode(SetBuildModePacket msg, PacketBuffer buffer) {
+  public static void encode(SetBuildModePacket msg, FriendlyByteBuf buffer) {
     buffer.writeBoolean(msg.value);
   }
 

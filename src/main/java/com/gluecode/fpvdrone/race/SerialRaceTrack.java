@@ -1,10 +1,10 @@
 package com.gluecode.fpvdrone.race;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -25,14 +25,14 @@ public class SerialRaceTrack {
     this.gates = gates;
   }
 
-  public static void encode(SerialRaceTrack msg, PacketBuffer buffer) {
+  public static void encode(SerialRaceTrack msg, FriendlyByteBuf buffer) {
     buffer.writeLong(msg.trackId.getMostSignificantBits());
     buffer.writeLong(msg.trackId.getLeastSignificantBits());
     buffer.writeUtf(msg.name);
     SerialRaceTrack.encodeGates(msg.gates, buffer);
   }
 
-  public static SerialRaceTrack decode(PacketBuffer buffer) {
+  public static SerialRaceTrack decode(FriendlyByteBuf buffer) {
     return new SerialRaceTrack(new UUID(
       buffer.readLong(),
       buffer.readLong()
@@ -41,7 +41,7 @@ public class SerialRaceTrack {
 
   public static void encodeGates(
     ArrayList<SerialRaceGate> gates,
-    PacketBuffer buffer
+    FriendlyByteBuf buffer
   ) {
     buffer.writeVarInt(gates.size());
 
@@ -51,7 +51,7 @@ public class SerialRaceTrack {
     }
   }
 
-  public static ArrayList<SerialRaceGate> decodeGates(PacketBuffer buffer) {
+  public static ArrayList<SerialRaceGate> decodeGates(FriendlyByteBuf buffer) {
     int size = buffer.readVarInt();
 
     ArrayList<SerialRaceGate> gates = new ArrayList<>();

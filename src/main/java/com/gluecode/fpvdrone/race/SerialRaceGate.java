@@ -2,19 +2,19 @@ package com.gluecode.fpvdrone.race;
 
 import com.gluecode.fpvdrone.Main;
 import com.jme3.math.Vector3f;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapeArray;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.ArrayVoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -53,7 +53,7 @@ public class SerialRaceGate {
     this.up = new Vector3f(upX, upY, upZ);
   }
   
-  public static void encode(SerialRaceGate gate, PacketBuffer buffer) {
+  public static void encode(SerialRaceGate gate, FriendlyByteBuf buffer) {
     buffer.writeUtf(gate.dimension);
     buffer.writeInt(gate.origin.getX());
     buffer.writeInt(gate.origin.getY());
@@ -71,7 +71,7 @@ public class SerialRaceGate {
     buffer.writeInt((int) gate.up.z);
   }
   
-  public static SerialRaceGate decode(PacketBuffer buffer) {
+  public static SerialRaceGate decode(FriendlyByteBuf buffer) {
     return new SerialRaceGate(
       buffer.readUtf(),
       buffer.readInt(),
@@ -135,9 +135,9 @@ public class SerialRaceGate {
     
     Minecraft minecraft = Minecraft.getInstance();
     if (minecraft.player == null) {
-      return VoxelShapes.empty();
+      return Shapes.empty();
     }
-    World world = minecraft.player.getCommandSenderWorld();
+    Level world = minecraft.player.getCommandSenderWorld();
     String currentPlayerDimension = Main.getDimension(world);
     if (currentPlayerDimension == null || !currentPlayerDimension.equals(
       this.dimension)) {
@@ -146,7 +146,7 @@ public class SerialRaceGate {
       // The player can't see the gate since it's in a different dimension....
       // ... Unless the player has the Immersive Portals mod... maybe..
       // Maybe that could be a future feature.
-      return VoxelShapes.empty();
+      return Shapes.empty();
     }
     
     int rightX = (int) this.right.getX();
@@ -156,7 +156,7 @@ public class SerialRaceGate {
     int upY = (int) this.up.getY();
     int upZ = (int) this.up.getZ();
     
-    VoxelShape result = VoxelShapes.empty();
+    VoxelShape result = Shapes.empty();
     
     //    Main.LOGGER.info("start");
     BlockPos testPos;
@@ -173,17 +173,17 @@ public class SerialRaceGate {
         //        Main.LOGGER.info("testPos: " + testPos);
         BlockState state = world.getBlockState(testPos);
         VoxelShape gatePart = state.getShape(world, testPos);
-        //        result = VoxelShapes.or(result, gatePart);
-        result = VoxelShapes.joinUnoptimized(
+        //        result = Shapes.or(result, gatePart);
+        result = Shapes.joinUnoptimized(
           result,
           gatePart,
-          IBooleanFunction.OR
+          BooleanOp.OR
         );
       }
     }
     //    Main.LOGGER.info("end");
     
-    //    result = VoxelShapes.combineAndSimplify(VoxelShapes.fullCube(), VoxelShapes.or(makeCuboidShape(0.0D, 0.0D, 4.0D, 16.0D, 3.0D, 12.0D), makeCuboidShape(4.0D, 0.0D, 0.0D, 12.0D, 3.0D, 16.0D), makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 3.0D, 14.0D), makeCuboidShape(2.0D, 4.0D, 2.0D, 14.0D, 16.0D, 14.0D)), IBooleanFunction.OR);
+    //    result = Shapes.combineAndSimplify(Shapes.fullCube(), Shapes.or(makeCuboidShape(0.0D, 0.0D, 4.0D, 16.0D, 3.0D, 12.0D), makeCuboidShape(4.0D, 0.0D, 0.0D, 12.0D, 3.0D, 16.0D), makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 3.0D, 14.0D), makeCuboidShape(2.0D, 4.0D, 2.0D, 14.0D, 16.0D, 14.0D)), BooleanOp.OR);
     
     //    result = result.simplify();
     
@@ -198,7 +198,7 @@ public class SerialRaceGate {
     double y2,
     double z2
   ) {
-    return VoxelShapes.box(
+    return Shapes.box(
       x1 / 16.0D,
       y1 / 16.0D,
       z1 / 16.0D,

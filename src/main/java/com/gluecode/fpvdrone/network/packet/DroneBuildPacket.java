@@ -4,11 +4,11 @@ import com.gluecode.fpvdrone.Main;
 import com.gluecode.fpvdrone.entity.DroneBuild;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -109,7 +109,7 @@ public class DroneBuildPacket {
     this.isToothpick = build.isToothpick;
   }
   
-  public static DroneBuildPacket decode(PacketBuffer buffer) {
+  public static DroneBuildPacket decode(FriendlyByteBuf buffer) {
     return new DroneBuildPacket(
       new UUID(buffer.readLong(), buffer.readLong()),
       buffer.readFloat(),
@@ -135,7 +135,7 @@ public class DroneBuildPacket {
     );
   }
   
-  public static void encode(DroneBuildPacket msg, PacketBuffer buffer) {
+  public static void encode(DroneBuildPacket msg, FriendlyByteBuf buffer) {
     buffer.writeLong(msg.userId.getMostSignificantBits());
     buffer.writeLong(msg.userId.getLeastSignificantBits());
     buffer.writeFloat(msg.red);

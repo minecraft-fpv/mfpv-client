@@ -1,11 +1,11 @@
 package com.gluecode.fpvdrone.network.packet;
 
 import com.gluecode.fpvdrone.race.RaceClient;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -21,14 +21,14 @@ public class LapStartPacket {
     this.uuidLeastSig = uuid.getLeastSignificantBits();
   }
   
-  public static LapStartPacket decode(PacketBuffer buffer) {
+  public static LapStartPacket decode(FriendlyByteBuf buffer) {
     return new LapStartPacket(
       buffer.readLong(),
       new UUID(buffer.readLong(), buffer.readLong())
     );
   }
   
-  public static void encode(LapStartPacket msg, PacketBuffer buffer) {
+  public static void encode(LapStartPacket msg, FriendlyByteBuf buffer) {
     buffer.writeLong(msg.startTimeMillis);
     buffer.writeLong(msg.uuidMostSig);
     buffer.writeLong(msg.uuidLeastSig);
